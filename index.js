@@ -57,14 +57,13 @@ class GxCertClient {
     if (
       certificate.context === undefined || certificate.context === null
       || Object.prototype.toString.call(certificate.context) !== "[object Object]"
-      || !certificate.from 
-      || !certificate.to 
-      || certificate.date === undefined
-      || certificate.date === null
-      || !certificate.title
-      || !certificate.description
-      || !certificate.image
-      || !certificate.url
+      || typeof certificate.from !== "string"
+      || typeof certificate.to !== "string"
+      || typeof certificate.date !== "number"
+      || typeof certificate.title !== "string"
+      || typeof certificate.description !== "string"
+      || typeof certificate.image !== "string"
+      || typeof certificate.url !== "string"
     ) {
       return false;
     }
