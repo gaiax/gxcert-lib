@@ -1,6 +1,8 @@
 const IPFS = require("ipfs-core");
 const { sha3num } = require("solidity-sha3");
 const EthUtil = require("ethereumjs-util");
+const Web3 = require("web3");
+const web3 = new Web3();
 
 class GxCertClient {
   constructor(web3) {
@@ -41,7 +43,8 @@ class GxCertClient {
   }
   async signCertificate(privateKey, certificate) {
     const { cid } = await this.uploadCertificateToIpfs(certificate);
-    const hash = sha3num(cid);
+    const hash = web3.utils.soliditySha3({ type: "string", value: cid });
+    console.log(hash);
     const signature = this.web3.eth.accounts.sign(
       hash,
       privateKey,

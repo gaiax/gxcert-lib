@@ -46,6 +46,10 @@ describe("GxCertClient", () => {
       assert.equal(cid.length, 46);
       assert.equal(typeof cidHash, "string");
       assert.equal(typeof signature.signature, "string");
+      console.log(cid);
+      console.log(cidHash);
+      console.log(certificate);
+      console.log(signature);
     });
   });
   describe("isCertificate", () => {
