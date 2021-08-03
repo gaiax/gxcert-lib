@@ -23,17 +23,15 @@ class GxCertClient {
   }
   async getCertificate(cid) {
     const content = JSON.parse(await this.getFile(cid));
-    if (typeof content.from !== "string"
-      || typeof content.to !== "string"
-      || typeof content.date !== "number"
-      || typeof content.title !== "string"
-      || typeof content.description !== "string") {
-      throw new Error("Invalid Certificate Object");
+    if (!this.isCertificate(content)) {
+      throw new Error("The certificate is invalid.");
     }
     return content;
   }
-  async uploadCertificateToIpfs(from, to, date, title, description) {
-    const certificate = this.createCertificate(from, to, date, title, description);
+  async uploadCertificateToIpfs(certificate) {
+    if (!this.isCertificate(certificate)) {
+      throw new Error("The certificate is invalid.");
+    }
     const json = JSON.stringify(certificate);
     const cid = await this.ipfs.add(json);
     return {
@@ -41,8 +39,8 @@ class GxCertClient {
       certificate,
     };
   }
-  async signCertificate(privateKey, from, to, date, title, description) {
-    const { cid, certificate } = await this.uploadCertificateToIpfs(from, to, date, title, description);
+  async signCertificate(privateKey, certificate) {
+    const { cid } = await this.uploadCertificateToIpfs(certificate);
     const hash = sha3num(cid);
     const signature = this.web3.eth.accounts.sign(
       hash,
@@ -55,21 +53,21 @@ class GxCertClient {
       certificate,
     }
   }
-  createCertificate(from, to, date, title, description) {
-    if (typeof from !== "string"
-      || typeof to !== "string"
-      || typeof date !== "number"
-      || typeof title !== "string"
-      || typeof description !== "string") {
-      throw new Error("Invalid Certificate Object");
+  isCertificate(certificate) {
+    if (
+      certificate.context === undefined || certificate.context === null
+      || Object.prototype.toString.call(certificate.context) !== "[object Object]"
+      || typeof certificate.from !== "string"
+      || typeof certificate.to !== "string"
+      || typeof certificate.date !== "number"
+      || typeof certificate.title !== "string"
+      || typeof certificate.description !== "string"
+      || typeof certificate.image !== "string"
+      || typeof certificate.url !== "string"
+    ) {
+      return false;
     }
-    return {
-      from,
-      to,
-      date,
-      title,
-      description,
-    }
+    return true;
   }
 }
 
