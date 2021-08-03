@@ -59,7 +59,7 @@ class GxCertClient {
       || Object.prototype.toString.call(certificate.context) !== "[object Object]"
       || typeof certificate.from !== "string"
       || typeof certificate.to !== "string"
-      || typeof certificate.date !== "number"
+      || typeof certificate.issued_at !== "number"
       || typeof certificate.title !== "string"
       || typeof certificate.description !== "string"
       || typeof certificate.image !== "string"

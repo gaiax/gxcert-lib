@@ -20,7 +20,7 @@ const validCertificate = {
   context: {},
   from: "from",
   to: "to",
-  date: (new Date()).getTime(),
+  issued_at: (new Date()).getTime(),
   title: "title",
   description: "description",
   image: "image",
