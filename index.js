@@ -50,7 +50,7 @@ class GxCertClient {
     const hash = web3.utils.soliditySha3({ type: "string", value: cid });
     console.log(hash);
     const signature = await this.web3.eth.personal.sign(
-      hash,
+      cid,
       certificate.from,
       null,
     );
