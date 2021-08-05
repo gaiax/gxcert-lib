@@ -45,13 +45,14 @@ class GxCertClient {
       certificate,
     };
   }
-  async signCertificate(privateKey, certificate) {
+  async signCertificate(certificate) {
     const { cid } = await this.uploadCertificateToIpfs(certificate);
     const hash = web3.utils.soliditySha3({ type: "string", value: cid });
     console.log(hash);
-    const signature = this.web3.eth.accounts.sign(
+    const signature = await this.web3.eth.personal.sign(
       hash,
-      privateKey,
+      certificate.from,
+      null,
     );
     return {
       signature,
