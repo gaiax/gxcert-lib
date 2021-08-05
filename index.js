@@ -12,6 +12,10 @@ class GxCertClient {
   async init() {
     this.ipfs = await IPFS.create();
   }
+  async uploadImageToIpfs(imageBuf) {
+    const cid = await this.ipfs.add(imageBuf);
+    return cid.path;
+  }
   async getFile(cid) {
     const content = [];
     for await (const file of this.ipfs.get(cid)) {
