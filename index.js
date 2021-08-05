@@ -3,7 +3,6 @@ const { sha3num } = require("solidity-sha3");
 const EthUtil = require("ethereumjs-util");
 const Web3 = require("web3");
 const web3 = new Web3();
-import { sha3num } from "solidity-sha3";
 
 class GxCertClient {
   constructor(web3) {
