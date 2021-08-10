@@ -3,14 +3,18 @@ const { sha3num } = require("solidity-sha3");
 const EthUtil = require("ethereumjs-util");
 const Web3 = require("web3");
 const web3 = new Web3();
+const EthereumTx = require("ethereumjs-tx").Transaction;
+const abi = require("./abi.json");
 
 class GxCertClient {
-  constructor(web3) {
+  constructor(web3, contractAddress) {
     this.ipfs = null;
     this.web3 = web3;
+    this.contractAddress = contractAddress;
   }
   async init() {
     this.ipfs = await IPFS.create();
+    this.contract = await new this.web3.eth.Contract(abi, this.contractAddress);
   }
   async uploadImageToIpfs(imageBuf) {
     const cid = await this.ipfs.add(imageBuf);
@@ -44,6 +48,16 @@ class GxCertClient {
       cid: cid.path,
       certificate,
     };
+  }
+  async getReceivedCert(address, index) {
+    const response = await contract.methods.getReceivedCert(address, index).call();
+    const certificate = await this.getFile(response[2]);
+    return certificate;
+  }
+  async getSentCert(address, index) {
+    const response = await contract.methods.getSentCert(address, index).call();
+    const certificate = await this.getFile(response[2]);
+    return certificate;
   }
   async signCertificate(certificate) {
     const { cid } = await this.uploadCertificateToIpfs(certificate);
