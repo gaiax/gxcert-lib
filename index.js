@@ -50,12 +50,12 @@ class GxCertClient {
     };
   }
   async getReceivedCert(address, index) {
-    const response = await contract.methods.getReceivedCert(address, index).call();
+    const response = await this.contract.methods.getReceivedCert(address, index).call();
     const certificate = await this.getFile(response[2]);
     return certificate;
   }
   async getSentCert(address, index) {
-    const response = await contract.methods.getSentCert(address, index).call();
+    const response = await this.contract.methods.getSentCert(address, index).call();
     const certificate = await this.getFile(response[2]);
     return certificate;
   }
