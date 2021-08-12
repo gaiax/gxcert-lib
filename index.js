@@ -59,13 +59,21 @@ class GxCertClient {
     const certificate = await this.getFile(response[2]);
     return certificate;
   }
-  async signCertificate(certificate) {
+  async signCertificate(certificate, privateKey) {
     const { cid } = await this.uploadCertificateToIpfs(certificate);
     const hash = sha3num(cid);
-    const signature = await this.web3.eth.personal.sign(
-      hash,
-      certificate.from,
-    );
+    let signature;
+    if (privateKey) {
+      signature = await this.web3.eth.accounts.sign(
+        hash,
+        privateKey,
+      );
+    } else {
+      signature = await this.web3.eth.personal.sign(
+        hash,
+        certificate.from,
+      );
+    }
     return {
       signature,
       cidHash: hash,

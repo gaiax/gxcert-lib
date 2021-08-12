@@ -11,14 +11,17 @@ function generatePrivateKey() {
   }
   return key;
 }
-const privateKey = generatePrivateKey();
+const account = web3.eth.accounts.create();
+const privateKey = account.privateKey;
+const address = account.address;
+web3.eth.accounts.privateKeyToAccount(privateKey);
 
 before(async () => {
   await client.init();
 });
 const validCertificate = {
   context: {},
-  from: "from",
+  from: address,
   to: "to",
   issued_at: (new Date()).getTime(),
   title: "title",
@@ -40,7 +43,8 @@ describe("GxCertClient", () => {
       assert.equal(JSON.stringify(certificate), JSON.stringify(validCertificate));
     });
     it ("signCertificate", async () => {
-      const { signature, cidHash, cid, certificate } = await client.signCertificate(privateKey, validCertificate);
+      console.log(validCertificate);
+      const { signature, cidHash, cid, certificate } = await client.signCertificate(validCertificate, privateKey);
       assert.equal(JSON.stringify(certificate), JSON.stringify(validCertificate));
       assert.equal(typeof cid, "string");
       assert.equal(cid.length, 46);
@@ -59,7 +63,6 @@ describe("GxCertClient", () => {
     });
     it ("invalid object", () => {
       const keys = Object.keys(validCertificate);
-      console.log(keys);
       for (const key of keys) {
         const copy = JSON.parse(JSON.stringify(validCertificate));
         copy[key] = undefined;
