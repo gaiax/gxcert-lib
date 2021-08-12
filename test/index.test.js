@@ -1,8 +1,8 @@
 const assert = require("assert");
 const GxCertClient = require("../index");
 const Web3 = require("web3");
-const web3 = new Web3();
-const client = new GxCertClient(web3, null, "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
+const web3 = new Web3("https://matic-mumbai.chainstacklabs.com");
+const client = new GxCertClient(web3, "0xf82617BAf46F9C08B3EF6D5DC538EcBE53A882bA", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
 function generatePrivateKey() {
   const chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
   let key = "";
@@ -77,6 +77,16 @@ describe("GxCertClient", () => {
       this.timeout(20 * 1000);
       const signed = await client.signCertificate(validCertificate, privateKey);
       await client.sendSignedCertificateToGx(signed);
+    });
+  });
+  describe("get received & sent cert", () => {
+    it ("get received cert", async () => {
+      const receivedCert = await client.getReceivedCert(to.address, 1);
+      assert.equal(receivedCert.to, to.address);
+    });
+    it ("get sent cert", async () => {
+      const sentCert = await client.getSentCert(address, 1);
+      assert.equal(sentCert.from, address);
     });
   });
 });
