@@ -2,7 +2,7 @@ const assert = require("assert");
 const GxCertClient = require("../index");
 const Web3 = require("web3");
 const web3 = new Web3();
-const client = new GxCertClient(web3);
+const client = new GxCertClient(web3, null, "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
 function generatePrivateKey() {
   const chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
   let key = "";
@@ -12,6 +12,7 @@ function generatePrivateKey() {
   return key;
 }
 const account = web3.eth.accounts.create();
+const to = web3.eth.accounts.create();
 const privateKey = account.privateKey;
 const address = account.address;
 web3.eth.accounts.privateKeyToAccount(privateKey);
@@ -22,7 +23,7 @@ before(async () => {
 const validCertificate = {
   context: {},
   from: address,
-  to: "to",
+  to: to.address,
   issued_at: (new Date()).getTime(),
   title: "title",
   description: "description",
@@ -49,7 +50,7 @@ describe("GxCertClient", () => {
       assert.equal(typeof cid, "string");
       assert.equal(cid.length, 46);
       assert.equal(typeof cidHash, "string");
-      assert.equal(typeof signature.signature, "string");
+      assert.equal(typeof signature, "string");
       console.log(cid);
       console.log(cidHash);
       console.log(certificate);
@@ -69,6 +70,13 @@ describe("GxCertClient", () => {
         const isValid = client.isCertificate(copy);
         assert.equal(isValid, false);
       }
+    });
+  });
+  describe("sendSignedCertificateToGx", () => {
+    it ("valid certificate", async function() {
+      this.timeout(20 * 1000);
+      const signed = await client.signCertificate(validCertificate, privateKey);
+      await client.sendSignedCertificateToGx(signed);
     });
   });
 });

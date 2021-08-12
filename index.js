@@ -4,17 +4,37 @@ const EthUtil = require("ethereumjs-util");
 const Web3 = require("web3");
 const web3 = new Web3();
 const EthereumTx = require("ethereumjs-tx").Transaction;
+const request = require("request");
 const abi = require("./abi.json");
 
 class GxCertClient {
-  constructor(web3, contractAddress) {
+  constructor(web3, contractAddress, baseUrl) {
     this.ipfs = null;
     this.web3 = web3;
     this.contractAddress = contractAddress;
+    this.baseUrl = baseUrl;
   }
   async init() {
     this.ipfs = await IPFS.create();
     this.contract = await new this.web3.eth.Contract(abi, this.contractAddress);
+  }
+  sendSignedCertificateToGx(signed) {
+    return new Promise((resolve, reject) => {
+      const options = {
+        uri: this.baseUrl + "/new",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        json: signed,
+      }
+      request.post(options, (err, response, body) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
   }
   async uploadImageToIpfs(imageBuf) {
     const cid = await this.ipfs.add(imageBuf);
