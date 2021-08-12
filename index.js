@@ -67,7 +67,7 @@ class GxCertClient {
       signature = await this.web3.eth.accounts.sign(
         hash,
         privateKey,
-      );
+      ).signature;
     } else {
       signature = await this.web3.eth.personal.sign(
         hash,
