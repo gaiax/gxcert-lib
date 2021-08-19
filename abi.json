@@ -129,11 +129,6 @@
         "type": "bytes"
       },
       {
-        "internalType": "bytes32",
-        "name": "hashedId",
-        "type": "bytes32"
-      },
-      {
         "internalType": "uint256",
         "name": "timestamp",
         "type": "uint256"
@@ -200,11 +195,6 @@
         "internalType": "bytes",
         "name": "_sig",
         "type": "bytes"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_hashedId",
-        "type": "bytes32"
       }
     ],
     "name": "createCert",
@@ -264,6 +254,40 @@
   {
     "inputs": [
       {
+        "internalType": "string",
+        "name": "_cid",
+        "type": "string"
+      }
+    ],
+    "name": "getCertByCid",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "ref",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "_addr",
         "type": "address"
@@ -290,11 +314,6 @@
         "internalType": "string",
         "name": "ref",
         "type": "string"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
       },
       {
         "internalType": "uint256",
@@ -334,11 +353,6 @@
         "internalType": "string",
         "name": "ref",
         "type": "string"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
       },
       {
         "internalType": "uint256",
@@ -632,9 +646,9 @@
   {
     "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "_hashedId",
-        "type": "bytes32"
+        "internalType": "string",
+        "name": "_cid",
+        "type": "string"
       }
     ],
     "name": "verifyReceiver",
@@ -651,9 +665,9 @@
   {
     "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "_hashedId",
-        "type": "bytes32"
+        "internalType": "string",
+        "name": "_cid",
+        "type": "string"
       }
     ],
     "name": "verifySender",
@@ -668,4 +682,3 @@
     "type": "function"
   }
 ]
-
