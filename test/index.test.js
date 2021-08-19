@@ -2,7 +2,7 @@ const assert = require("assert");
 const GxCertClient = require("../index");
 const Web3 = require("web3");
 const web3 = new Web3("https://matic-mumbai.chainstacklabs.com");
-const client = new GxCertClient(web3, "0xf82617BAf46F9C08B3EF6D5DC538EcBE53A882bA", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
+const client = new GxCertClient(web3, "0xB50267Ee91f214160c35Bf1aFCb5D9D520D76322", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
 function generatePrivateKey() {
   const chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
   let key = "";
@@ -30,18 +30,15 @@ const validCertificate = {
   image: "image",
   url: "https://gaiax.com",
 }
+let validCertificateCid;
 describe("GxCertClient", () => {
   describe("IPFS", () => {
     it ("uploadCertificateToIpfs", async () => {
       const { cid, certificate } = await client.uploadCertificateToIpfs(validCertificate);
+      validCertificateCid = cid;
       assert.equal(JSON.stringify(certificate), JSON.stringify(validCertificate));
       assert.equal(typeof cid, "string");
       assert.equal(cid.length, 46);
-    });
-    it ("getCertificate", async () => {
-      const { cid } = await client.uploadCertificateToIpfs(validCertificate);
-      const certificate = await client.getCertificate(cid);
-      assert.equal(JSON.stringify(certificate), JSON.stringify(validCertificate));
     });
     it ("signCertificate", async () => {
       console.log(validCertificate);
@@ -87,6 +84,10 @@ describe("GxCertClient", () => {
     it ("get sent cert", async () => {
       const sentCert = await client.getSentCert(address, 1);
       assert.equal(sentCert.from, address);
+    });
+    it ("get cert by cid", async () => {
+      const cert = await client.getCertByCid(validCertificateCid);
+      assert.equal(cert.from, validCertificate.from);
     });
   });
 });

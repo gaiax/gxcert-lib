@@ -51,13 +51,6 @@ class GxCertClient {
       return content.toString();
     }
   }
-  async getCertificate(cid) {
-    const content = JSON.parse(await this.getFile(cid));
-    if (!this.isCertificate(content)) {
-      throw new Error("The certificate is invalid.");
-    }
-    return content;
-  }
   async uploadCertificateToIpfs(certificate) {
     if (!this.isCertificate(certificate)) {
       throw new Error("The certificate is invalid.");
@@ -76,6 +69,11 @@ class GxCertClient {
   }
   async getSentCert(address, index) {
     const response = await this.contract.methods.getSentCert(address, index).call();
+    const certificate = JSON.parse(await this.getFile(response[2]));
+    return certificate;
+  }
+  async getCertByCid(cid) {
+    const response = await this.contract.methods.getCertByCid(cid).call();
     const certificate = JSON.parse(await this.getFile(response[2]));
     return certificate;
   }
