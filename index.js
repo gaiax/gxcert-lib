@@ -44,11 +44,11 @@ class GxCertClient {
     const content = [];
     for await (const file of this.ipfs.get(cid)) {
       if (!file.content) continue;
-      const content = [];
+      const content = "";
       for await (const chunk of file.content) {
-        content.push(chunk);
+        content += String.fromCharCode(chunk);
       }
-      return content.toString();
+      return content;
     }
   }
   async uploadCertificateToIpfs(certificate) {
