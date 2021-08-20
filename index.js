@@ -1,4 +1,4 @@
-const IPFS = require("ipfs-core");
+const IpfsHttpClient = require("ipfs-http-client");
 const { sha3num } = require("solidity-sha3");
 const EthUtil = require("ethereumjs-util");
 const Web3 = require("web3");
@@ -15,7 +15,11 @@ class GxCertClient {
     this.baseUrl = baseUrl;
   }
   async init() {
-    this.ipfs = await IPFS.create();
+    this.ipfs = IpfsHttpClient({
+      host: "ipfs.infura.io",
+      port: 5001,
+      protocol: "https"
+    });
     this.contract = await new this.web3.eth.Contract(abi, this.contractAddress);
   }
   sendSignedCertificateToGx(signed) {
