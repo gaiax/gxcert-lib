@@ -6,6 +6,7 @@ const web3 = new Web3();
 const EthereumTx = require("ethereumjs-tx").Transaction;
 const request = require("request");
 const abi = require("./abi.json");
+const BufferList = require("bl/BufferList");
 
 class GxCertClient {
   constructor(web3, contractAddress, baseUrl) {
@@ -45,8 +46,12 @@ class GxCertClient {
     return cid.path;
   }
   async getFile(cid) {
-    for await (const file of this.ipfs.cat(cid)) {
-      return file.toString();
+    for await (const file of this.ipfs.get(cid)) {
+      const content = new BufferList();
+      for await (const chunk of file.content) {
+        content.append(chunk);
+      }
+      return content.toString();
     }
   }
   async uploadCertificateToIpfs(certificate) {

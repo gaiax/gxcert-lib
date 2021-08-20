@@ -33,7 +33,8 @@ const validCertificate = {
 let validCertificateCid;
 describe("GxCertClient", () => {
   describe("IPFS", () => {
-    it ("uploadCertificateToIpfs", async () => {
+    it ("uploadCertificateToIpfs", async function() {
+      this.timeout(20 * 1000);
       const { cid, certificate } = await client.uploadCertificateToIpfs(validCertificate);
       validCertificateCid = cid;
       assert.equal(JSON.stringify(certificate), JSON.stringify(validCertificate));

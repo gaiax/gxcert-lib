@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@truffle/hdwallet-provider": "^1.4.2",
+    "bl": "^4.1.0",
     "firebase": "^8.9.0",
     "ipfs-http-client": "^49.0.1",
     "request": "^2.88.2",
