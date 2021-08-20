@@ -41,13 +41,8 @@ class GxCertClient {
     return cid.path;
   }
   async getFile(cid) {
-    for await (const file of this.ipfs.get(cid)) {
-      if (!file.content) continue;
-      let content = "";
-      for await (const chunk of file.content) {
-        content += String.fromCharCode(chunk);
-      }
-      return content;
+    for await (const file of this.ipfs.cat(cid)) {
+      return file.toString();
     }
   }
   async uploadCertificateToIpfs(certificate) {
