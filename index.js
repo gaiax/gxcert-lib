@@ -15,6 +15,9 @@ class GxCertClient {
     this.contractAddress = contractAddress;
     this.baseUrl = baseUrl;
   }
+  isInitialized() {
+    return (this.ipfs !== undefined && this.contract !== undefined);
+  }
   async init() {
     this.ipfs = IpfsHttpClient({
       host: "ipfs.infura.io",

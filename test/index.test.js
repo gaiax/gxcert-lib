@@ -2,7 +2,7 @@ const assert = require("assert");
 const GxCertClient = require("../index");
 const Web3 = require("web3");
 const web3 = new Web3("https://matic-mumbai.chainstacklabs.com");
-const client = new GxCertClient(web3, "0xB50267Ee91f214160c35Bf1aFCb5D9D520D76322", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
+const client = new GxCertClient(web3, "0x4F09E3a387aF774FB9815850b893D44781563904", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
 function generatePrivateKey() {
   const chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
   let key = "";
@@ -17,9 +17,6 @@ const privateKey = account.privateKey;
 const address = account.address;
 web3.eth.accounts.privateKeyToAccount(privateKey);
 
-before(async () => {
-  await client.init();
-});
 const validCertificate = {
   context: {},
   from: address,
@@ -32,6 +29,16 @@ const validCertificate = {
 }
 let validCertificateCid;
 describe("GxCertClient", () => {
+  describe("isInitialized", async () => {
+    it("not initialized", async function() {
+      assert.equal(client.isInitialized(), false);
+    });
+    it("initialized", async function() {
+      this.timeout(20 * 1000);
+      await client.init();
+      assert.equal(client.isInitialized(), true);
+    });
+  });
   describe("IPFS", () => {
     it ("uploadCertificateToIpfs", async function() {
       this.timeout(20 * 1000);
