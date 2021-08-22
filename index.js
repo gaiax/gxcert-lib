@@ -82,7 +82,6 @@ class GxCertClient {
     const response = await this.contract.methods.getSentCerts(address).call();
     const certificates = [];
     const cids = response[2];
-    const certificates = [];
     for (const cid of cids) {
       const certificate = JSON.parse(await this.getFile(cid));
       if (this.isCertificate(certificate)) {
@@ -95,7 +94,6 @@ class GxCertClient {
     const response = await this.contract.methods.getReceivedCerts(address).call();
     const certificates = [];
     const cids = response[2];
-    const certificates = [];
     for (const cid of cids) {
       const certificate = JSON.parse(await this.getFile(cid));
       if (this.isCertificate(certificate)) {
