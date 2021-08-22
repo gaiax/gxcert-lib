@@ -96,4 +96,18 @@ describe("GxCertClient", () => {
       assert.equal(cert.from, validCertificate.from);
     });
   });
+  describe("get received & sent certs", () => {
+    it ("get received certs", async function () {
+      this.timeout(20 * 1000);
+      const certs = await client.getReceivedCerts(to.address);
+      assert.equal(certs.length, 1);
+      assert.equal(certs[0].to, to.address);
+    });
+    it ("get sent certs", async function () {
+      this.timeout(20 * 1000);
+      const certs = await client.getSentCerts(to.address);
+      assert.equal(certs.length, 1);
+      assert.equal(certs[0].from, address);
+    });
+  });
 });

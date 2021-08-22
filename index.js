@@ -78,6 +78,32 @@ class GxCertClient {
     const certificate = JSON.parse(await this.getFile(response[2]));
     return certificate;
   }
+  async getSentCerts(address) {
+    const response = await this.contract.methods.getSentCerts(address).call();
+    const certificates = [];
+    const cids = response[2];
+    const certificates = [];
+    for (const cid of cids) {
+      const certificate = JSON.parse(await this.getFile(cid));
+      if (this.isCertificate(certificate)) {
+        certificates.push(certificate);
+      }
+    }
+    return certificates;
+  }
+  async getReceivedCerts(address) {
+    const response = await this.contract.methods.getReceivedCerts(address).call();
+    const certificates = [];
+    const cids = response[2];
+    const certificates = [];
+    for (const cid of cids) {
+      const certificate = JSON.parse(await this.getFile(cid));
+      if (this.isCertificate(certificate)) {
+        certificates.push(certificate);
+      }
+    }
+    return certificates;
+  }
   async getCertByCid(cid) {
     const response = await this.contract.methods.getCertByCid(cid).call();
     const certificate = JSON.parse(await this.getFile(response[2]));
