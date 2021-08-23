@@ -44,14 +44,22 @@ describe("GxCertClient", () => {
       this.timeout(20 * 1000);
       const { cid, certificate } = await client.uploadCertificateToIpfs(validCertificate);
       validCertificateCid = cid;
-      assert.equal(JSON.stringify(certificate), JSON.stringify(validCertificate));
-      assert.equal(typeof cid, "string");
+      assert.equal(certificate.from, validCertificate.from);
+      assert.equal(certificate.to, validCertificate.to);
+      assert.equal(certificate.title, validCertificate.title);
+      assert.equal(certificate.description, validCertificate.description);
+      assert.equal(certificate.image, validCertificate.image);
+      assert.equal(certificate.url, validCertificate.url);
       assert.equal(cid.length, 46);
     });
     it ("signCertificate", async () => {
       const { signature, cidHash, cid, certificate } = await client.signCertificate(validCertificate, privateKey);
-      assert.equal(JSON.stringify(certificate), JSON.stringify(validCertificate));
-      assert.equal(typeof cid, "string");
+      assert.equal(certificate.from, validCertificate.from);
+      assert.equal(certificate.to, validCertificate.to);
+      assert.equal(certificate.title, validCertificate.title);
+      assert.equal(certificate.description, validCertificate.description);
+      assert.equal(certificate.image, validCertificate.image);
+      assert.equal(certificate.url, validCertificate.url);
       assert.equal(cid.length, 46);
       assert.equal(typeof cidHash, "string");
       assert.equal(typeof signature, "string");
@@ -84,16 +92,19 @@ describe("GxCertClient", () => {
       this.timeout(20 * 1000);
       const receivedCert = await client.getReceivedCert(to.address, 1);
       assert.equal(receivedCert.to, to.address);
+      assert.equal(receivedCert.cid, validCertificateCid);
     });
     it ("get sent cert", async function() {
       this.timeout(20 * 1000);
       const sentCert = await client.getSentCert(address, 1);
       assert.equal(sentCert.from, address);
+      assert.equal(sentCert.cid, validCertificateCid);
     });
     it ("get cert by cid", async function() {
       this.timeout(20 * 1000);
       const cert = await client.getCertByCid(validCertificateCid);
       assert.equal(cert.from, validCertificate.from);
+      assert.equal(cert.cid, validCertificateCid);
     });
   });
   describe("get received & sent certs", () => {
@@ -102,12 +113,14 @@ describe("GxCertClient", () => {
       const certs = await client.getReceivedCerts(to.address);
       assert.equal(certs.length, 1);
       assert.equal(certs[0].to, to.address);
+      assert.equal(certs[0].cid, validCertificateCid);
     });
     it ("get sent certs", async function () {
       this.timeout(20 * 1000);
       const certs = await client.getSentCerts(address);
       assert.equal(certs.length, 1);
       assert.equal(certs[0].from, address);
+      assert.equal(certs[0].cid, validCertificateCid);
     });
   });
 });

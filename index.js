@@ -70,12 +70,16 @@ class GxCertClient {
   }
   async getReceivedCert(address, index) {
     const response = await this.contract.methods.getReceivedCert(address, index).call();
-    const certificate = JSON.parse(await this.getFile(response[2]));
+    const cid = response[2];
+    const certificate = JSON.parse(await this.getFile(cid));
+    certificate.cid = cid;
     return certificate;
   }
   async getSentCert(address, index) {
     const response = await this.contract.methods.getSentCert(address, index).call();
-    const certificate = JSON.parse(await this.getFile(response[2]));
+    const cid = response[2];
+    const certificate = JSON.parse(await this.getFile(cid));
+    certificate.cid = cid;
     return certificate;
   }
   async getSentCerts(address) {
@@ -84,6 +88,7 @@ class GxCertClient {
     const cids = response[2];
     for (const cid of cids) {
       const certificate = JSON.parse(await this.getFile(cid));
+      certificate.cid = cid;
       if (this.isCertificate(certificate)) {
         certificates.push(certificate);
       }
@@ -96,6 +101,7 @@ class GxCertClient {
     const cids = response[2];
     for (const cid of cids) {
       const certificate = JSON.parse(await this.getFile(cid));
+      certificate.cid = cid;
       if (this.isCertificate(certificate)) {
         certificates.push(certificate);
       }
@@ -104,7 +110,8 @@ class GxCertClient {
   }
   async getCertByCid(cid) {
     const response = await this.contract.methods.getCertByCid(cid).call();
-    const certificate = JSON.parse(await this.getFile(response[2]));
+    const certificate = JSON.parse(await this.getFile(cid));
+    certificate.cid = cid;
     return certificate;
   }
   async signCertificate(certificate, privateKey) {
