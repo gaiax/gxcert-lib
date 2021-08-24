@@ -162,7 +162,10 @@ class GxCertClient {
     return group;
   }
   async signMemberAddress(address, privateKey) {
-    const hash = sha3num(address);
+    const hash = web3.utils.soliditySha3({
+      type: "address",
+      value: address,
+    });
     let signature;
     if (privateKey) {
       signature = await this.web3.eth.accounts.sign(
