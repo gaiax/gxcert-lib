@@ -65,6 +65,24 @@ class GxCertClient {
       });
     });
   }
+  async inviteMemberToGroup(signedAddress) {
+    return new Promise((resolve, reject) => {
+      const options = {
+        uri: this.baseUrl + "/group",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        json: signedAddress,,
+      }
+      request.post(options, (err, response, body) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
+  }
   async uploadImageToIpfs(imageBuf) {
     const cid = await this.ipfs.add(imageBuf);
     return cid.path;
