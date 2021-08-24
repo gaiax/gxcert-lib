@@ -44,6 +44,27 @@ class GxCertClient {
       });
     });
   }
+  async createGroup(name, address) {
+    return new Promise((resolve, reject) => {
+      const options = {
+        uri: this.baseUrl + "/group",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        json: {
+          name,
+          address,
+        },
+      }
+      request.post(options, (err, response, body) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
+  }
   async uploadImageToIpfs(imageBuf) {
     const cid = await this.ipfs.add(imageBuf);
     return cid.path;
@@ -75,15 +96,15 @@ class GxCertClient {
     certificate.cid = cid;
     return certificate;
   }
-  async getSentCert(address, index) {
-    const response = await this.contract.methods.getSentCert(address, index).call();
+  async getSentCert(groupId, index) {
+    const response = await this.contract.methods.getSentCert(groupId, index).call();
     const cid = response[2];
     const certificate = JSON.parse(await this.getFile(cid));
     certificate.cid = cid;
     return certificate;
   }
-  async getSentCerts(address) {
-    const response = await this.contract.methods.getSentCerts(address).call();
+  async getSentCerts(groupId) {
+    const response = await this.contract.methods.getSentCerts(groupId).call();
     const certificates = [];
     const cids = response[2];
     for (const cid of cids) {
@@ -113,6 +134,14 @@ class GxCertClient {
     const certificate = JSON.parse(await this.getFile(cid));
     certificate.cid = cid;
     return certificate;
+  }
+  async getGroup(groupId) {
+    const response = await this.contract.methods.getGroup(groupId).call();
+    const group = {
+      name: response[0],
+      members: response[1],
+    }
+    return group;
   }
   async signCertificate(certificate, privateKey) {
     const { cid } = await this.uploadCertificateToIpfs(certificate);
