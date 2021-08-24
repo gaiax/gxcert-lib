@@ -72,7 +72,7 @@ class GxCertClient {
         headers: {
           "Content-Type": "application/json"
         },
-        json: signedAddress,,
+        json: signedAddress,
       }
       request.post(options, (err, response, body) => {
         if (err) {
