@@ -143,6 +143,26 @@ class GxCertClient {
     }
     return group;
   }
+  async signMemberAddress(address, privateKey) {
+    const hash = sha3num(address);
+    let signature;
+    if (privateKey) {
+      signature = await this.web3.eth.accounts.sign(
+        hash,
+        privateKey,
+      ).signature;
+    } else {
+      signature = await this.web3.eth.personal.sign(
+        hash,
+        certificate.from,
+      );
+    }
+    return {
+      signature,
+      address,
+      addressHash: hash,
+    }
+  }
   async signCertificate(certificate, privateKey) {
     const { cid } = await this.uploadCertificateToIpfs(certificate);
     const hash = sha3num(cid);

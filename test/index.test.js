@@ -13,6 +13,7 @@ function generatePrivateKey() {
 }
 const account = web3.eth.accounts.create();
 const to = web3.eth.accounts.create();
+const charlie = web3.eth.accounts.create();
 const privateKey = account.privateKey;
 const address = account.address;
 web3.eth.accounts.privateKeyToAccount(privateKey);
@@ -46,12 +47,25 @@ describe("GxCertClient", () => {
       groupId = await client.createGroup("group1", address);
       validCertificate.groupId = groupId;
     });
-
+    it ("invite member to group", async function () {
+      const targetAddress = charlie.address;
+      const signedAddress = await client.signMemberAddress(targetAddress, privateKey);
+      await client.inviteMemberToGroup(groupId, signedAddress);
+    });
     it("get group", async function () {
       const group = await client.getGroup(groupId);
       assert.equal(group.name, "group1");
-      assert.equal(group.members.length, 1);
+      assert.equal(group.members.length, 2);
       assert.equal(group.members[0], address);
+      assert.equal(group.members[1], charlie.address);
+    });
+    it ("get groups", async function () {
+      const groups = await client.getGroups(address);
+      assert.equal(groups.length, 1);
+      assert.equal(groups[0].name, "group1");
+      assert.equal(groups[0].members.length, 2);
+      assert.equal(groups[0].members[0], address);
+      assert.equal(groups[0].members[1], charlie.address);
     });
   });
   describe("IPFS", () => {
