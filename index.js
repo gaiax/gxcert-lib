@@ -176,6 +176,7 @@ class GxCertClient {
       || typeof certificate.description !== "string"
       || typeof certificate.image !== "string"
       || typeof certificate.url !== "string"
+      || typeof certificate.groupId !== "number"
     ) {
       return false;
     }
