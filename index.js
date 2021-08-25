@@ -161,6 +161,15 @@ class GxCertClient {
     }
     return group;
   }
+  async getGroups(address) {
+    const groups = [];
+    const response = await this.contract.methods.getGroupIds(address).call();
+    for (const groupId of response) {
+      const group = await this.getGroup(groupId);
+      groups.push(group);
+    }
+    return groups;
+  }
   async signMemberAddress(address, privateKey) {
     const hash = web3.utils.soliditySha3({
       type: "address",
