@@ -166,7 +166,7 @@ class GxCertClient {
     const groups = [];
     const response = await this.contract.methods.getGroupIds(address).call();
     for (const groupId of response) {
-      const group = await this.getGroup(groupId);
+      const group = await this.getGroup(parseInt(groupId));
       groups.push(group);
     }
     return groups;
