@@ -219,6 +219,27 @@ class GxCertClient {
       certificate,
     }
   }
+  async signProfile(profile, privateKey) {
+    const unsigned = profile.name + profile.email;
+    const hash = sha3num(unsigned);
+    let signature;
+    if (privateKey) {
+      signature = await this.web3.eth.accounts.sign(
+        hash,
+        privateKey,
+      ).signature;
+    } else {
+      signature = await this.web3.eth.personal.sign(
+        hash,
+        certificate.from,
+      );
+    }
+    return {
+      signature,
+      profileHash: hash,
+      profile,
+    }
+  }
   isCertificate(certificate) {
     if (
       certificate.context === undefined || certificate.context === null
