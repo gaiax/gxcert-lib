@@ -53,7 +53,7 @@ class GxCertClient {
         },
         json: {
           name,
-          address,
+          member: address,
         },
       }
       request.post(options, (err, response, body) => {
@@ -65,14 +65,17 @@ class GxCertClient {
       });
     });
   }
-  async inviteMemberToGroup(signedAddress) {
+  async inviteMemberToGroup(groupId, signedAddress) {
     return new Promise((resolve, reject) => {
       const options = {
-        uri: this.baseUrl + "/group",
+        uri: this.baseUrl + "/invite",
         headers: {
           "Content-Type": "application/json"
         },
-        json: signedAddress,
+        json: {
+          signedAddress,
+          groupId,
+        },
       }
       request.post(options, (err, response, body) => {
         if (err) {
