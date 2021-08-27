@@ -222,25 +222,36 @@ class GxCertClient {
     }
   }
   async signProfile(profile, accountToSign) {
-    const unsigned = profile.name + profile.email;
-    const hash = sha3num(unsigned);
-    let signature;
+    const nameHash = sha3num(profile.name);
+    const emailHash = sha3num(profile.email);
+    let nameSignature;
+    let emailSignature;
     if (accountToSign.privateKey) {
-      signature = await this.web3.eth.accounts.sign(
-        hash,
+      nameSignature = await this.web3.eth.accounts.sign(
+        nameHash,
+        accountToSign.privateKey,
+      ).signature;
+      emailSignature = await this.web3.eth.accounts.sign(
+        emailHash,
         accountToSign.privateKey,
       ).signature;
     } else if (accountToSign.address) {
-      signature = await this.web3.eth.personal.sign(
-        hash,
+      nameSignature = await this.web3.eth.personal.sign(
+        nameHash,
+        accountToSign.address,
+      );
+      emailSignature = await this.web3.eth.personal.sign(
+        emailHash,
         accountToSign.address,
       );
     } else {
       throw new Error("It needs an account to sign");
     }
     return {
-      signature,
-      profileHash: hash,
+      nameSignature,
+      emailSignature,
+      nameHash,
+      emailHash,,
       profile,
     }
   }
