@@ -66,7 +66,7 @@ describe("GxCertClient", () => {
     it ("invite member to group", async function () {
       this.timeout(20 * 1000);
       const targetAddress = charlie.address;
-      const signedAddress = await client.signMemberAddress(targetAddress, privateKey);
+      const signedAddress = await client.signMemberAddress(targetAddress, { privateKey });
       await client.inviteMemberToGroup(groupId, signedAddress);
     });
     it("get group", async function () {

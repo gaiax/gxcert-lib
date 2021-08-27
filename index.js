@@ -174,22 +174,24 @@ class GxCertClient {
     }
     return groups;
   }
-  async signMemberAddress(address, privateKey) {
+  async signMemberAddress(address, accountToSign) {
     const hash = web3.utils.soliditySha3({
       type: "address",
       value: address,
     });
     let signature;
-    if (privateKey) {
+    if (accountToSign.privateKey) {
       signature = await this.web3.eth.accounts.sign(
         hash,
-        privateKey,
+        accountToSign.privateKey,
       ).signature;
-    } else {
+    } else if (accountToSign.address) {
       signature = await this.web3.eth.personal.sign(
         hash,
-        certificate.from,
+        accountToSign.address,
       );
+    } else {
+      throw new Error("It needs an account to sign");
     }
     return {
       signature,
@@ -219,20 +221,22 @@ class GxCertClient {
       certificate,
     }
   }
-  async signProfile(profile, privateKey) {
+  async signProfile(profile, accountToSign) {
     const unsigned = profile.name + profile.email;
     const hash = sha3num(unsigned);
     let signature;
-    if (privateKey) {
+    if (accountToSign.privateKey) {
       signature = await this.web3.eth.accounts.sign(
         hash,
-        privateKey,
+        accountToSign.privateKey,
       ).signature;
-    } else {
+    } else if (accountToSign.address) {
       signature = await this.web3.eth.personal.sign(
         hash,
-        certificate.from,
+        accountToSign.address,
       );
+    } else {
+      throw new Error("It needs an account to sign");
     }
     return {
       signature,
