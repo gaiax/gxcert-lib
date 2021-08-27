@@ -44,6 +44,27 @@ class GxCertClient {
       });
     });
   }
+  async sendSignedProfileToGx(address, signedProfile) {
+    return new Promise((resolve, reject) => {
+      const options = {
+        uri: this.baseUrl + "/profile",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        json: {
+          address,
+          signedProfile,
+        },
+      }
+      request.post(options, (err, response, body) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
+  }
   async createGroup(name, address) {
     return new Promise((resolve, reject) => {
       const options = {
@@ -220,6 +241,15 @@ class GxCertClient {
       cid,
       certificate,
     }
+  }
+  async getProfile(address) {
+    const response = await this.contract.methods.getProfile(address).call();
+    const name = response[0];
+    const email = response[1];
+    return {
+      name,
+      email,
+    };
   }
   async signProfile(profile, accountToSign) {
     const nameHash = web3.utils.soliditySha3({

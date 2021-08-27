@@ -164,6 +164,30 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "Profiles",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "email",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "",
         "type": "address"
@@ -270,6 +294,45 @@
       }
     ],
     "name": "createGroup",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_email",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_nameSig",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_emailSig",
+        "type": "bytes"
+      }
+    ],
+    "name": "createProfile",
     "outputs": [
       {
         "internalType": "uint256",
@@ -424,6 +487,30 @@
         "internalType": "uint256[]",
         "name": "",
         "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      }
+    ],
+    "name": "getProfile",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
       }
     ],
     "stateMutability": "view",

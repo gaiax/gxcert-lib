@@ -35,6 +35,11 @@ const validCertificate = {
   url: "https://gaiax.com",
   groupId: null, // It will be set during test.
 }
+
+const validProfile = {
+  name: "alice",
+  email: "alice@example.com",
+}
 let validCertificateCid;
 let groupId;
 describe("GxCertClient", () => {
@@ -46,6 +51,22 @@ describe("GxCertClient", () => {
       this.timeout(20 * 1000);
       await client.init();
       assert.equal(client.isInitialized(), true);
+    });
+  });
+  describe("Profile", async () => {
+    it ("create profile", async function () {
+      this.timeout(20 * 1000);
+      const signedProfile = await client.signProfile(validProfile, { privateKey: privateKey });
+      await client.sendSignedProfileToGx(
+        address,
+        signedProfile,
+      );
+    });
+    it ("get profile", async function() {
+      this.timeout(20 * 1000);
+      const profile = await client.getProfile(address);
+      assert.equal(profile.name, validProfile.name);
+      assert.equal(profile.email, validProfile.email);
     });
   });
   describe("Group", async () => {
