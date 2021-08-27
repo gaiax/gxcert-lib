@@ -224,11 +224,11 @@ class GxCertClient {
   async signProfile(profile, accountToSign) {
     const nameHash = web3.utils.soliditySha3({
       type: "string",
-      value: profile.name,,
+      value: profile.name,
     });
     const emailHash = web3.utils.soliditySha3({
       type: "string",
-      value: profile.email,,
+      value: profile.email,
     });
     let nameSignature;
     let emailSignature;
