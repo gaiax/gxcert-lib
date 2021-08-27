@@ -222,8 +222,14 @@ class GxCertClient {
     }
   }
   async signProfile(profile, accountToSign) {
-    const nameHash = sha3num(profile.name);
-    const emailHash = sha3num(profile.email);
+    const nameHash = web3.utils.soliditySha3({
+      type: "string",
+      value: profile.name,,
+    });
+    const emailHash = web3.utils.soliditySha3({
+      type: "string",
+      value: profile.email,,
+    });
     let nameSignature;
     let emailSignature;
     if (accountToSign.privateKey) {
