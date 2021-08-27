@@ -251,7 +251,7 @@ class GxCertClient {
       nameSignature,
       emailSignature,
       nameHash,
-      emailHash,,
+      emailHash,
       profile,
     }
   }
