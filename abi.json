@@ -288,13 +288,8 @@
         "type": "string"
       },
       {
-        "internalType": "string",
-        "name": "_memberName",
-        "type": "string"
-      },
-      {
         "internalType": "address",
-        "name": "_memberAddress",
+        "name": "_address",
         "type": "address"
       }
     ],
@@ -700,23 +695,13 @@
         "type": "uint256"
       },
       {
-        "internalType": "string",
-        "name": "_memberName",
-        "type": "string"
-      },
-      {
         "internalType": "address",
-        "name": "_memberAddress",
+        "name": "_address",
         "type": "address"
       },
       {
         "internalType": "bytes",
-        "name": "_nameSig",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_addressSig",
+        "name": "_sig",
         "type": "bytes"
       }
     ],
