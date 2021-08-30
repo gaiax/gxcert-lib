@@ -284,12 +284,17 @@
     "inputs": [
       {
         "internalType": "string",
-        "name": "name",
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_memberName",
         "type": "string"
       },
       {
         "internalType": "address",
-        "name": "_member",
+        "name": "_memberAddress",
         "type": "address"
       }
     ],
@@ -463,6 +468,11 @@
         "internalType": "string",
         "name": "",
         "type": "string"
+      },
+      {
+        "internalType": "string[]",
+        "name": "",
+        "type": "string[]"
       },
       {
         "internalType": "address[]",
@@ -690,13 +700,23 @@
         "type": "uint256"
       },
       {
+        "internalType": "string",
+        "name": "_memberName",
+        "type": "string"
+      },
+      {
         "internalType": "address",
-        "name": "_member",
+        "name": "_memberAddress",
         "type": "address"
       },
       {
         "internalType": "bytes",
-        "name": "_sig",
+        "name": "_nameSig",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_addressSig",
         "type": "bytes"
       }
     ],
