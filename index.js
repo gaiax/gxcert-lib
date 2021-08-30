@@ -89,7 +89,7 @@ class GxCertClient {
       });
     });
   }
-  async inviteMemberToGroup(groupId, signedMember) {
+  async inviteMemberToGroup(groupId, signedAddress) {
     return new Promise((resolve, reject) => {
       const options = {
         uri: this.baseUrl + "/invite",
@@ -97,7 +97,7 @@ class GxCertClient {
           "Content-Type": "application/json"
         },
         json: {
-          signedMember,
+          signedAddress,
           groupId,
         },
       }
@@ -207,44 +207,29 @@ class GxCertClient {
     }
     return groups;
   }
-  async signMemberAddress(name, address, accountToSign) {
-    const nameHash = web3.utils.soliditySha3({
-      type: "string",
-      value: name,
-    });
-    const addressHash = web3.utils.soliditySha3({
+  async signMemberAddress(address, accountToSign) {
+    const hash = web3.utils.soliditySha3({
       type: "address",
       value: address,
     });
-    let nameSignature, addressSignature;
+    let signature;
     if (accountToSign.privateKey) {
-      nameSignature = await this.web3.eth.accounts.sign(
-        nameHash,
-        accountToSign.privateKey,
-      ).signature;
-      addressSignature = await this.web3.eth.accounts.sign(
-        addressHash,
+      signature = await this.web3.eth.accounts.sign(
+        hash,
         accountToSign.privateKey,
       ).signature;
     } else if (accountToSign.address) {
-      nameSignature = await this.web3.eth.personal.sign(
-        nameHash,
-        accountToSign.address,
-      );
-      addressSignature = await this.web3.eth.personal.sign(
-        addressHash,
+      signature = await this.web3.eth.personal.sign(
+        hash,
         accountToSign.address,
       );
     } else {
       throw new Error("It needs an account to sign");
     }
     return {
-      nameSignature,
-      addressSignature,
+      signature,
       address,
-      name,
-      nameHash,
-      addressHash,
+      addressHash: hash,
     }
   }
   async signCertificate(certificate, privateKey) {
