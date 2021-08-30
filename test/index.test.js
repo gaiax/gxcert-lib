@@ -2,7 +2,7 @@ const assert = require("assert");
 const GxCertClient = require("../index");
 const Web3 = require("web3");
 const web3 = new Web3("https://matic-mumbai.chainstacklabs.com");
-const client = new GxCertClient(web3, "0xAA683C2c4bd5eC5260CBE06C9f33e1AF26390Fb2", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
+const client = new GxCertClient(web3, "0x148d5A48945f78e47C283580a127bF6F85497B57", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
 function generatePrivateKey() {
   const chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
   let key = "";
@@ -72,7 +72,7 @@ describe("GxCertClient", () => {
   describe("Group", async () => {
     it("create group", async function () {
       this.timeout(20 * 1000);
-      await client.createGroup("group1", "alice", address);
+      await client.createGroup("group1", address);
     });
     it ("get groups", async function () {
       this.timeout(20 * 1000);
@@ -98,7 +98,7 @@ describe("GxCertClient", () => {
       assert.equal(group.members.length, 2);
       assert.equal(group.members[0].name, "alice");
       assert.equal(group.members[0].address, address);
-      assert.equal(group.members[1].name, "charlie");
+      assert.equal(group.members[1].name, "");
       assert.equal(group.members[1].address, charlie.address);
     });
   });

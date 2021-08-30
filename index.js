@@ -65,7 +65,7 @@ class GxCertClient {
       });
     });
   }
-  async createGroup(name, memberName, memberAddress) {
+  async createGroup(name, address) {
     return new Promise((resolve, reject) => {
       const options = {
         uri: this.baseUrl + "/group",
@@ -74,10 +74,7 @@ class GxCertClient {
         },
         json: {
           name,
-          member: {
-            name: memberName,
-            address: memberAddress,
-          },
+          member: address,
         },
       }
       request.post(options, (err, response, body) => {
