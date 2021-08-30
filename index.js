@@ -65,7 +65,7 @@ class GxCertClient {
       });
     });
   }
-  async createGroup(name, address) {
+  async createGroup(name, memberName, memberAddress) {
     return new Promise((resolve, reject) => {
       const options = {
         uri: this.baseUrl + "/group",
@@ -74,7 +74,10 @@ class GxCertClient {
         },
         json: {
           name,
-          member: address,
+          member: {
+            name: memberName,
+            address: memberAddress,
+          },
         },
       }
       request.post(options, (err, response, body) => {
@@ -86,7 +89,7 @@ class GxCertClient {
       });
     });
   }
-  async inviteMemberToGroup(groupId, signedAddress) {
+  async inviteMemberToGroup(groupId, signedMember) {
     return new Promise((resolve, reject) => {
       const options = {
         uri: this.baseUrl + "/invite",
@@ -94,7 +97,7 @@ class GxCertClient {
           "Content-Type": "application/json"
         },
         json: {
-          signedAddress,
+          signedMember,
           groupId,
         },
       }
