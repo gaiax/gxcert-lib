@@ -367,6 +367,7 @@ class GxCertClient {
       || typeof certificate.title !== "string"
       || typeof certificate.description !== "string"
       || typeof certificate.image !== "string"
+      || typeof certificate.groupId !== "number"
     ) {
       return false;
     }

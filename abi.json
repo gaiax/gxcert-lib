@@ -109,29 +109,9 @@
     "name": "Certificates",
     "outputs": [
       {
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
         "internalType": "string",
         "name": "cid",
         "type": "string"
-      },
-      {
-        "internalType": "bytes",
-        "name": "sig",
-        "type": "bytes"
-      },
-      {
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
       },
       {
         "internalType": "uint256",
@@ -188,6 +168,40 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "UserCertificates",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "certId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "",
         "type": "address"
@@ -198,7 +212,31 @@
         "type": "uint256"
       }
     ],
-    "name": "addressGroupIdMap",
+    "name": "addressToGroupIds",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "addressToUserCertIds",
     "outputs": [
       {
         "internalType": "uint256",
@@ -250,13 +288,32 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "groupId",
+        "name": "",
         "type": "uint256"
       },
       {
-        "internalType": "address",
-        "name": "_to",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "certIdToUserCertIds",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_groupId",
+        "type": "uint256"
       },
       {
         "internalType": "string",
@@ -346,6 +403,40 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_certId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_to",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_sig",
+        "type": "bytes"
+      }
+    ],
+    "name": "createUserCert",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "string",
         "name": "cid",
         "type": "string"
@@ -395,6 +486,30 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "target",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "signature",
+        "type": "bytes"
+      }
+    ],
+    "name": "ecverifyId",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "sig_address",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
       }
@@ -413,6 +528,30 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_certId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getCert",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "string",
         "name": "_cid",
         "type": "string"
@@ -421,24 +560,9 @@
     "name": "getCertByCid",
     "outputs": [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
         "internalType": "string",
-        "name": "ref",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
         "name": "",
-        "type": "uint256"
+        "type": "string"
       },
       {
         "internalType": "uint256",
@@ -481,6 +605,30 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_groupId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getGroupCerts",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "string[]",
+        "name": "",
+        "type": "string[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "_member",
         "type": "address"
@@ -488,6 +636,40 @@
     ],
     "name": "getGroupIds",
     "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_certId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getIssuedUserCerts",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      },
       {
         "internalType": "uint256[]",
         "name": "",
@@ -527,53 +709,9 @@
         "internalType": "address",
         "name": "_addr",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_index",
-        "type": "uint256"
       }
     ],
-    "name": "getReceivedCert",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "ref",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_addr",
-        "type": "address"
-      }
-    ],
-    "name": "getReceivedCerts",
+    "name": "getReceivedUserCerts",
     "outputs": [
       {
         "internalType": "address[]",
@@ -584,11 +722,6 @@
         "internalType": "address[]",
         "name": "",
         "type": "address[]"
-      },
-      {
-        "internalType": "string[]",
-        "name": "",
-        "type": "string[]"
       },
       {
         "internalType": "uint256[]",
@@ -608,16 +741,11 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_groupId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_index",
+        "name": "_userCertId",
         "type": "uint256"
       }
     ],
-    "name": "getSentCert",
+    "name": "getUserCert",
     "outputs": [
       {
         "internalType": "address",
@@ -628,11 +756,6 @@
         "internalType": "address",
         "name": "",
         "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "ref",
-        "type": "string"
       },
       {
         "internalType": "uint256",
@@ -652,36 +775,21 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_groupId",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "name": "getSentCerts",
+    "name": "groupIdToCertIds",
     "outputs": [
       {
-        "internalType": "address[]",
+        "internalType": "uint256",
         "name": "",
-        "type": "address[]"
-      },
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      },
-      {
-        "internalType": "string[]",
-        "name": "",
-        "type": "string[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -799,6 +907,35 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_sig",
+        "type": "bytes"
+      },
+      {
+        "internalType": "uint256",
+        "name": "groupId",
+        "type": "uint256"
+      }
+    ],
+    "name": "isValidSignOfId",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "name",
     "outputs": [
@@ -838,30 +975,6 @@
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "receivedCerts",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -923,30 +1036,6 @@
     "name": "safeTransferFrom",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "sentCerts",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1052,44 +1141,6 @@
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_cid",
-        "type": "string"
-      }
-    ],
-    "name": "verifyReceiver",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_cid",
-        "type": "string"
-      }
-    ],
-    "name": "verifySender",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   }
 ]
