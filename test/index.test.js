@@ -2,7 +2,7 @@ const assert = require("assert");
 const GxCertClient = require("../index");
 const Web3 = require("web3");
 const web3 = new Web3("https://matic-mumbai.chainstacklabs.com");
-const client = new GxCertClient(web3, "0x148d5A48945f78e47C283580a127bF6F85497B57", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
+const client = new GxCertClient(web3, "0xFC5eE41B4defa960d1823DABa8433bbdf6254392", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
 function generatePrivateKey() {
   const chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
   let key = "";
@@ -26,14 +26,16 @@ function wait(ms) {
 
 const validCertificate = {
   context: {},
-  from: address,
-  to: to.address,
-  issued_at: (new Date()).getTime(),
   title: "title",
   description: "description",
   image: "image",
-  url: "https://gaiax.com",
   groupId: null, // It will be set during test.
+}
+
+const validUserCertificate = {
+  certId: null,
+  from: address,
+  to: to.address,
 }
 
 const validProfile = {
@@ -42,6 +44,7 @@ const validProfile = {
 }
 let validCertificateCid;
 let groupId;
+let certId;
 describe("GxCertClient", () => {
   describe("isInitialized", async () => {
     it("not initialized", async function() {
@@ -57,7 +60,7 @@ describe("GxCertClient", () => {
     it ("create profile", async function () {
       this.timeout(20 * 1000);
       const signedProfile = await client.signProfile(validProfile, { privateKey: privateKey });
-      await client.sendSignedProfileToGx(
+      await client.createProfile(
         address,
         signedProfile,
       );
@@ -106,24 +109,17 @@ describe("GxCertClient", () => {
     it ("uploadCertificateToIpfs", async function() {
       this.timeout(20 * 1000);
       const { cid, certificate } = await client.uploadCertificateToIpfs(validCertificate);
-      validCertificateCid = cid;
-      assert.equal(certificate.from, validCertificate.from);
-      assert.equal(certificate.to, validCertificate.to);
       assert.equal(certificate.title, validCertificate.title);
       assert.equal(certificate.description, validCertificate.description);
       assert.equal(certificate.image, validCertificate.image);
-      assert.equal(certificate.url, validCertificate.url);
       assert.equal(certificate.groupId, validCertificate.groupId);
       assert.equal(cid.length, 46);
     });
     it ("signCertificate", async () => {
-      const { signature, cidHash, cid, certificate } = await client.signCertificate(validCertificate, privateKey);
-      assert.equal(certificate.from, validCertificate.from);
-      assert.equal(certificate.to, validCertificate.to);
+      const { signature, cidHash, cid, certificate } = await client.signCertificate(validCertificate, { privateKey });
       assert.equal(certificate.title, validCertificate.title);
       assert.equal(certificate.description, validCertificate.description);
       assert.equal(certificate.image, validCertificate.image);
-      assert.equal(certificate.url, validCertificate.url);
       assert.equal(certificate.groupId, validCertificate.groupId);
       assert.equal(cid.length, 46);
       assert.equal(typeof cidHash, "string");
@@ -145,47 +141,64 @@ describe("GxCertClient", () => {
       }
     });
   });
-  describe("sendSignedCertificateToGx", () => {
+  describe("createCert", () => {
     it ("valid certificate", async function() {
       this.timeout(20 * 1000);
-      const signed = await client.signCertificate(validCertificate, privateKey);
-      await client.sendSignedCertificateToGx(signed);
+      const signed = await client.signCertificate(validCertificate, { privateKey });
+      validCertificateCid = signed.cid;
+      await client.createCert(signed);
     });
   });
-  describe("get received & sent cert", () => {
-    it ("get received cert", async function () {
+  describe("get certificate", () => {
+    it ("get group certificates", async function() {
       this.timeout(20 * 1000);
-      const receivedCert = await client.getReceivedCert(to.address, 1);
-      assert.equal(receivedCert.to, to.address);
-      assert.equal(receivedCert.cid, validCertificateCid);
+      console.log(groupId);
+      console.log(validCertificate);
+      const certificates = await client.getGroupCerts(groupId);
+      assert.equal(certificates.length, 1);
+      assert.equal(certificates[0].title, validCertificate.title);
+      assert.equal(certificates[0].description, validCertificate.description);
+      assert.equal(certificates[0].image, validCertificate.image);
+      certId = certificates[0].id;
+      validUserCertificate.certId = certId;
     });
-    it ("get sent cert", async function() {
+    it ("get certificate", async function() {
       this.timeout(20 * 1000);
-      const sentCert = await client.getSentCert(groupId, 1);
-      assert.equal(sentCert.groupId, groupId);
-      assert.equal(sentCert.cid, validCertificateCid);
+      const certificate = await client.getCert(certId);
+      assert.equal(certificate.id, certId);
+      assert.equal(certificate.title, validCertificate.title);
+      assert.equal(certificate.description, validCertificate.description);
+      assert.equal(certificate.image, validCertificate.image);
     });
-    it ("get cert by cid", async function() {
+    it ("get certificate by cid", async function() {
       this.timeout(20 * 1000);
-      const cert = await client.getCertByCid(validCertificateCid);
-      assert.equal(cert.groupId, validCertificate.groupId);
-      assert.equal(cert.cid, validCertificateCid);
+      const certificate = await client.getCertByCid(validCertificateCid);
+      assert.equal(certificate.id, certId);
+      assert.equal(certificate.title, validCertificate.title);
+      assert.equal(certificate.description, validCertificate.description);
+      assert.equal(certificate.image, validCertificate.image);
     });
   });
-  describe("get received & sent certs", () => {
-    it ("get received certs", async function () {
+  describe("createUserCert", () => {
+    it ("valid user certificate", async function() {
       this.timeout(20 * 1000);
-      const certs = await client.getReceivedCerts(to.address);
-      assert.equal(certs.length, 1);
-      assert.equal(certs[0].to, to.address);
-      assert.equal(certs[0].cid, validCertificateCid);
+      const signed = await client.signUserCertificate(validUserCertificate, { privateKey });
+      await client.createUserCert(signed);
     });
-    it ("get sent certs", async function () {
+  });
+  describe("get user certificate", () => {
+    it ("get issued user certificates", async function() {
+      const userCertificates = await client.getIssuedUserCerts(certId);
+      assert.equal(userCertificates.length, 1);
+      assert.equal(userCertificates[0].from, validUserCertificate.from);
+      assert.equal(userCertificates[0].to, validUserCertificate.to);
+    });
+    it ("get received user certificates", async function() {
       this.timeout(20 * 1000);
-      const certs = await client.getSentCerts(groupId);
-      assert.equal(certs.length, 1);
-      assert.equal(certs[0].groupId, groupId);
-      assert.equal(certs[0].cid, validCertificateCid);
+      const userCertificates = await client.getReceivedUserCerts(validUserCertificate.to);
+      assert.equal(userCertificates.length, 1);
+      assert.equal(userCertificates[0].from, validUserCertificate.from);
+      assert.equal(userCertificates[0].to, validUserCertificate.to);
     });
   });
 });

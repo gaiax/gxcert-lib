@@ -26,10 +26,10 @@ class GxCertClient {
     });
     this.contract = await new this.web3.eth.Contract(abi, this.contractAddress);
   }
-  sendSignedCertificateToGx(signed) {
+  createCert(signed) {
     return new Promise((resolve, reject) => {
       const options = {
-        uri: this.baseUrl + "/new",
+        uri: this.baseUrl + "/cert",
         headers: {
           "Content-Type": "application/json"
         },
@@ -44,7 +44,25 @@ class GxCertClient {
       });
     });
   }
-  async sendSignedProfileToGx(address, signedProfile) {
+  createUserCert(signed) {
+    return new Promise((resolve, reject) => {
+      const options = {
+        uri: this.baseUrl + "/userCert",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        json: signed,
+      }
+      request.post(options, (err, response, body) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
+  }
+  async createProfile(address, signedProfile) {
     return new Promise((resolve, reject) => {
       const options = {
         uri: this.baseUrl + "/profile",
@@ -134,12 +152,9 @@ class GxCertClient {
   async getCert(certId) {
     const response = await this.contract.methods.getCert(certId).call();
     const cid = response[0];
-    const groupId = response[1];
-    const certificate = {
-      id: certId,
-      cid,
-      groupId,
-    }
+    const certificate = JSON.parse(await this.getFile(cid));
+    certificate.id = certId;
+    certificate.cid = cid;
     return certificate;
   }
   async getGroupCerts(groupId) {
@@ -160,6 +175,7 @@ class GxCertClient {
         continue;
       }
       certificate.id = certIds[i];
+      certificate.cid = cid;
       certificates.push(certificate);
     }
     return certificates;
@@ -205,12 +221,10 @@ class GxCertClient {
   }
   async getCertByCid(cid) {
     const response = await this.contract.methods.getCertByCid(cid).call();
-    const groupId = response[1];
-    const certificate = {
-      id: certId,
-      cid,
-      groupId,
-    }
+    const certId = response[0];
+    const certificate = JSON.parse(await this.getFile(cid));
+    certificate.cid = cid;
+    certificate.id = certId;
     return certificate;
   }
   async getGroup(groupId) {
