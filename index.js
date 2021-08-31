@@ -179,7 +179,7 @@ class GxCertClient {
     return userCerts;
   }
   async getReceivedUserCerts(address) {
-    const response = await this.contract.methods.getReceivedUserCerts(certId).call();
+    const response = await this.contract.methods.getReceivedUserCerts(address).call();
     const froms = response[0];
     const tos = response[1];
     const certIds = response[2];
