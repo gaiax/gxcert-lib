@@ -199,7 +199,6 @@ class GxCertClient {
   }
   async getCertByCid(cid) {
     const response = await this.contract.methods.getCertByCid(cid).call();
-    const cid = response[0];
     const groupId = response[1];
     const certificate = {
       id: certId,
@@ -260,26 +259,56 @@ class GxCertClient {
       addressHash: hash,
     }
   }
-  async signCertificate(certificate, privateKey) {
+  async signCertificate(certificate, accountToSign) {
     const { cid } = await this.uploadCertificateToIpfs(certificate);
-    const hash = sha3num(cid);
+    const hash = web3.utils.soliditySha3({
+      type: "string",
+      value: cid,
+    });
     let signature;
-    if (privateKey) {
+    if (accountToSign.privateKey) {
       signature = await this.web3.eth.accounts.sign(
         hash,
-        privateKey,
+        accountToSign.privateKey,
       ).signature;
-    } else {
+    } else if (accountToSign.address) {
       signature = await this.web3.eth.personal.sign(
         hash,
-        certificate.from,
+        accountToSign.address,
       );
+    } else {
+      throw new Error("It needs an account to sign");
     }
     return {
       signature,
       cidHash: hash,
       cid,
       certificate,
+    }
+  }
+  async signUserCertificate(userCertificate, accountToSign) {
+    const hash = web3.utils.soliditySha3({
+      type: "uint",
+      value: userCertificate.certId,
+    });
+    let signature;
+    if (accountToSign.privateKey) {
+      signature = await this.web3.eth.accounts.sign(
+        hash,
+        accountToSign.privateKey,
+      ).signature;
+    } else if (accountToSign.address) {
+      signature = await this.web3.eth.accounts.sign(
+        hash,
+        accountToSign.address,
+      );
+    } else {
+      throw new Error("It needs an account to sign");
+    }
+    return {
+      signature,
+      userCertificate,
+      hash,
     }
   }
   async getProfile(address) {
