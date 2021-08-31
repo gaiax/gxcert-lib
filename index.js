@@ -131,50 +131,80 @@ class GxCertClient {
       certificate,
     };
   }
-  async getReceivedCert(address, index) {
-    const response = await this.contract.methods.getReceivedCert(address, index).call();
-    const cid = response[2];
-    const certificate = JSON.parse(await this.getFile(cid));
-    certificate.cid = cid;
+  async getCert(certId) {
+    const response = await this.contract.methods.getCert(certId).call();
+    const cid = response[0];
+    const groupId = response[1];
+    const certificate = {
+      id: certId,
+      cid,
+      groupId,
+    }
     return certificate;
   }
-  async getSentCert(groupId, index) {
-    const response = await this.contract.methods.getSentCert(groupId, index).call();
-    const cid = response[2];
-    const certificate = JSON.parse(await this.getFile(cid));
-    certificate.cid = cid;
-    return certificate;
-  }
-  async getSentCerts(groupId) {
-    const response = await this.contract.methods.getSentCerts(groupId).call();
+  async getGroupCerts(groupId) {
+    const response = await this.contract.methods.getGroupCerts(groupId).call();
+    const certIds = response[0];
+    const cids = response[1];
     const certificates = [];
-    const cids = response[2];
-    for (const cid of cids) {
-      const certificate = JSON.parse(await this.getFile(cid));
-      certificate.cid = cid;
-      if (this.isCertificate(certificate)) {
-        certificates.push(certificate);
+    for (let i = 0; i < certIds.length; i++) {
+      const cid = cids[i];
+      const certificate = await this.getFile(cid);
+      if (!this.isCertificate(certificate)) {
+        continue;
       }
+      certificate.id = certIds[i];
+      certificates.push(certificate);
     }
     return certificates;
   }
-  async getReceivedCerts(address) {
-    const response = await this.contract.methods.getReceivedCerts(address).call();
-    const certificates = [];
-    const cids = response[2];
-    for (const cid of cids) {
-      const certificate = JSON.parse(await this.getFile(cid));
-      certificate.cid = cid;
-      if (this.isCertificate(certificate)) {
-        certificates.push(certificate);
-      }
+
+  async getIssuedUserCerts(certId) {
+    const response = await this.contract.methods.getIssuedUserCerts(certId).call();
+    const froms = response[0];
+    const tos = response[1];
+    const certIds = response[2];
+    const times = response[3];
+    const userCerts = [];
+    for (let i = 0; i < certIds.length; i++) {
+      const certificate = await this.getCert(certIds[i]);
+      certificate.id = certIds[i];
+      userCerts.push({
+        from: froms[i],
+        to: tos[i],
+        timestamp: times[i],
+        certificate,
+      });
     }
-    return certificates;
+    return userCerts;
+  }
+  async getReceivedUserCerts(address) {
+    const response = await this.contract.methods.getReceivedUserCerts(certId).call();
+    const froms = response[0];
+    const tos = response[1];
+    const certIds = response[2];
+    const times = response[3];
+    const userCerts = [];
+    for (let i = 0; i < certIds.length; i++) {
+      const certificate = await this.getCert(certIds[i]);
+      certificate.id = certIds[i];
+      userCerts.push({
+        from: froms[i],
+        to: tos[i],
+        timestamp: times[i],
+        certificate,
+      });
+    }
+    return userCerts;
   }
   async getCertByCid(cid) {
     const response = await this.contract.methods.getCertByCid(cid).call();
-    const certificate = JSON.parse(await this.getFile(cid));
-    certificate.cid = cid;
+    const groupId = response[1];
+    const certificate = {
+      id: certId,
+      cid,
+      groupId,
+    }
     return certificate;
   }
   async getGroup(groupId) {
@@ -229,26 +259,56 @@ class GxCertClient {
       addressHash: hash,
     }
   }
-  async signCertificate(certificate, privateKey) {
+  async signCertificate(certificate, accountToSign) {
     const { cid } = await this.uploadCertificateToIpfs(certificate);
-    const hash = sha3num(cid);
+    const hash = web3.utils.soliditySha3({
+      type: "string",
+      value: cid,
+    });
     let signature;
-    if (privateKey) {
+    if (accountToSign.privateKey) {
       signature = await this.web3.eth.accounts.sign(
         hash,
-        privateKey,
+        accountToSign.privateKey,
       ).signature;
-    } else {
+    } else if (accountToSign.address) {
       signature = await this.web3.eth.personal.sign(
         hash,
-        certificate.from,
+        accountToSign.address,
       );
+    } else {
+      throw new Error("It needs an account to sign");
     }
     return {
       signature,
       cidHash: hash,
       cid,
       certificate,
+    }
+  }
+  async signUserCertificate(userCertificate, accountToSign) {
+    const hash = web3.utils.soliditySha3({
+      type: "uint",
+      value: userCertificate.certId,
+    });
+    let signature;
+    if (accountToSign.privateKey) {
+      signature = await this.web3.eth.accounts.sign(
+        hash,
+        accountToSign.privateKey,
+      ).signature;
+    } else if (accountToSign.address) {
+      signature = await this.web3.eth.accounts.sign(
+        hash,
+        accountToSign.address,
+      );
+    } else {
+      throw new Error("It needs an account to sign");
+    }
+    return {
+      signature,
+      userCertificate,
+      hash,
     }
   }
   async getProfile(address) {
@@ -304,14 +364,9 @@ class GxCertClient {
     if (
       certificate.context === undefined || certificate.context === null
       || Object.prototype.toString.call(certificate.context) !== "[object Object]"
-      || typeof certificate.from !== "string"
-      || typeof certificate.to !== "string"
-      || typeof certificate.issued_at !== "number"
       || typeof certificate.title !== "string"
       || typeof certificate.description !== "string"
       || typeof certificate.image !== "string"
-      || typeof certificate.url !== "string"
-      || typeof certificate.groupId !== "number"
     ) {
       return false;
     }
