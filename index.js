@@ -149,7 +149,13 @@ class GxCertClient {
     const certificates = [];
     for (let i = 0; i < certIds.length; i++) {
       const cid = cids[i];
-      const certificate = await this.getFile(cid);
+      let certificate;
+      try {
+        certificate = JSON.parse(await this.getFile(cid));
+      } catch(err) {
+        console.error(err);
+        continue;
+      }
       if (!this.isCertificate(certificate)) {
         continue;
       }
