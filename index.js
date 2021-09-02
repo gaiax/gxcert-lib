@@ -157,6 +157,19 @@ class GxCertClient {
     certificate.cid = cid;
     return certificate;
   }
+  async getUserCert(userCertId) {
+    const response = await this.contract.methods.getUserCert(userCertId).call();
+    const from = response[0];
+    const to = response[1];
+    const certId = response[2];
+    const timestamp = response[3];
+    return {
+      from,
+      to,
+      certId,
+      timestamp,
+    }
+  }
   async getGroupCerts(groupId) {
     const response = await this.contract.methods.getGroupCerts(groupId).call();
     const certIds = response[0];

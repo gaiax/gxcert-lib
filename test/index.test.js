@@ -45,6 +45,7 @@ const validProfile = {
 let validCertificateCid;
 let groupId;
 let certId;
+let userCertId;
 describe("GxCertClient", () => {
   describe("isInitialized", async () => {
     it("not initialized", async function() {
@@ -187,6 +188,12 @@ describe("GxCertClient", () => {
     });
   });
   describe("get user certificate", () => {
+    it ("get user certificates", async function() {
+      const userCertificate = await client.getUserCert(userCertId);
+      assert.equal(userCertificate.from, validUserCertificate.from);
+      assert.equal(userCertificate.to, validUserCertificate.to);
+      assert.equal(userCertificate.certId, certId);
+    });
     it ("get issued user certificates", async function() {
       const userCertificates = await client.getIssuedUserCerts(certId);
       assert.equal(userCertificates.length, 1);
