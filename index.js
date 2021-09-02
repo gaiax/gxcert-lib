@@ -163,11 +163,13 @@ class GxCertClient {
     const to = response[1];
     const certId = response[2];
     const timestamp = response[3];
+    const certificate = await this.getCert(certId);
     return {
+      userCertId,
       from,
       to,
-      certId,
       timestamp,
+      certificate,
     }
   }
   async getGroupCerts(groupId) {
@@ -176,10 +178,10 @@ class GxCertClient {
     const cids = response[1];
     const certificates = [];
     for (let i = 0; i < certIds.length; i++) {
-      const cid = cids[i];
+      const certId = certIds[i];
       let certificate;
       try {
-        certificate = JSON.parse(await this.getFile(cid));
+        certificate = await this.getCert(certId);
       } catch(err) {
         console.error(err);
         continue;
@@ -187,8 +189,6 @@ class GxCertClient {
       if (!this.isCertificate(certificate)) {
         continue;
       }
-      certificate.id = certIds[i];
-      certificate.cid = cid;
       certificates.push(certificate);
     }
     return certificates;
@@ -198,13 +198,14 @@ class GxCertClient {
     const response = await this.contract.methods.getIssuedUserCerts(certId).call();
     const froms = response[0];
     const tos = response[1];
-    const certIds = response[2];
-    const times = response[3];
+    const userCertIds = response[2];
+    const certIds = response[3];
+    const times = response[4];
     const userCerts = [];
     for (let i = 0; i < certIds.length; i++) {
       const certificate = await this.getCert(certIds[i]);
-      certificate.id = certIds[i];
       userCerts.push({
+        userCertId: userCertIds[i],
         from: froms[i],
         to: tos[i],
         timestamp: times[i],
@@ -217,13 +218,14 @@ class GxCertClient {
     const response = await this.contract.methods.getReceivedUserCerts(address).call();
     const froms = response[0];
     const tos = response[1];
-    const certIds = response[2];
-    const times = response[3];
+    const userCertIds = response[2];
+    const certIds = response[3];
+    const times = response[4];
     const userCerts = [];
     for (let i = 0; i < certIds.length; i++) {
       const certificate = await this.getCert(certIds[i]);
-      certificate.id = certIds[i];
       userCerts.push({
+        userCertId: userCertIds[i],
         from: froms[i],
         to: tos[i],
         timestamp: times[i],
