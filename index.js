@@ -318,7 +318,7 @@ class GxCertClient {
         accountToSign.privateKey,
       ).signature;
     } else if (accountToSign.address) {
-      signature = await this.web3.eth.accounts.sign(
+      signature = await this.web3.eth.personal.sign(
         hash,
         accountToSign.address,
       );
