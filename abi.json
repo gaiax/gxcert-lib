@@ -160,6 +160,11 @@
         "internalType": "string",
         "name": "email",
         "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "icon",
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -379,6 +384,11 @@
         "type": "string"
       },
       {
+        "internalType": "string",
+        "name": "_icon",
+        "type": "string"
+      },
+      {
         "internalType": "bytes",
         "name": "_nameSig",
         "type": "bytes"
@@ -386,6 +396,11 @@
       {
         "internalType": "bytes",
         "name": "_emailSig",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_iconSig",
         "type": "bytes"
       }
     ],
@@ -694,6 +709,11 @@
     ],
     "name": "getProfile",
     "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      },
       {
         "internalType": "string",
         "name": "",
