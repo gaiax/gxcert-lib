@@ -245,12 +245,14 @@ class GxCertClient {
   async getGroup(groupId) {
     const response = await this.contract.methods.getGroup(groupId).call();
     const memberNames = response[1];
-    const memberAddresses = response[2];
+    const memberIcons = response[2];
+    const memberAddresses = response[3];
     const members = [];
     for (let i = 0; i < memberNames.length; i++) {
       members.push({
         name: memberNames[i],
         address: memberAddresses[i],
+        icon: memberIcons[i],
       });
     }
     const group = {
