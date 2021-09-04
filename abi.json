@@ -242,6 +242,25 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "addressToString",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "",
         "type": "address"
       },
@@ -297,6 +316,44 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "value",
+        "type": "bytes32"
+      }
+    ],
+    "name": "bytes32ToString",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "bytesToString",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -410,17 +467,7 @@
       },
       {
         "internalType": "bytes",
-        "name": "_nameSig",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_emailSig",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_iconSig",
+        "name": "_sig",
         "type": "bytes"
       }
     ],
@@ -535,9 +582,9 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "cid",
-        "type": "string"
+        "internalType": "bytes32",
+        "name": "hash",
+        "type": "bytes32"
       },
       {
         "internalType": "bytes",
@@ -546,54 +593,6 @@
       }
     ],
     "name": "ecverify",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "sig_address",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "target",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes",
-        "name": "signature",
-        "type": "bytes"
-      }
-    ],
-    "name": "ecverifyAddress",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "sig_address",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "target",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "signature",
-        "type": "bytes"
-      }
-    ],
-    "name": "ecverifyId",
     "outputs": [
       {
         "internalType": "address",
@@ -1017,9 +1016,9 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "_cid",
-        "type": "string"
+        "internalType": "bytes32",
+        "name": "hash",
+        "type": "bytes32"
       },
       {
         "internalType": "bytes",
@@ -1047,58 +1046,57 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_target",
+        "name": "target",
         "type": "address"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_sig",
-        "type": "bytes"
-      },
-      {
-        "internalType": "uint256",
-        "name": "groupId",
-        "type": "uint256"
       }
     ],
-    "name": "isValidSignOfAddress",
+    "name": "makeHash",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "bytes32",
         "name": "",
-        "type": "bool"
+        "type": "bytes32"
       }
     ],
-    "stateMutability": "view",
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "target",
+        "type": "string"
+      }
+    ],
+    "name": "makeHash",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   },
   {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_sig",
-        "type": "bytes"
-      },
-      {
-        "internalType": "uint256",
-        "name": "groupId",
+        "name": "target",
         "type": "uint256"
       }
     ],
-    "name": "isValidSignOfId",
+    "name": "makeHash",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "bytes32",
         "name": "",
-        "type": "bool"
+        "type": "bytes32"
       }
     ],
-    "stateMutability": "view",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -1307,6 +1305,25 @@
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "uintToString",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   }
 ]

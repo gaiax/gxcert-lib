@@ -395,7 +395,7 @@ class GxCertClient {
     }
   }
   async signUserCertificate(userCertificate, accountToSign) {
-    let hexString = userCertificate.certId.toHexString().slice(2);
+    let hexString = this.web3.utils.toHex(userCertificate.certId).slice(2);
     for (let i = 1; i < 128 - hexString.length - 1; i++) {
       hexString = "0" + hexString;
     }
