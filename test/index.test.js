@@ -2,7 +2,7 @@ const assert = require("assert");
 const GxCertClient = require("../index");
 const Web3 = require("web3");
 const web3 = new Web3("https://matic-mumbai.chainstacklabs.com");
-const client = new GxCertClient(web3, "0x9080783f02E9c6f87fc16Dd9f068CEd729561d4c", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
+const client = new GxCertClient(web3, "0xf68712119b2b699ad5EaEA3E791Ea48059c308ec", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
 function generatePrivateKey() {
   const chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
   let key = "";
@@ -191,26 +191,48 @@ describe("GxCertClient", () => {
       const signed = await client.signUserCertificate(validUserCertificate, { privateKey });
       await client.createUserCert(signed);
     });
+    it ("valid user certificates", async function() {
+      this.timeout(20 * 1000);
+      const signed = await client.signUserCertificate(validUserCertificate, { privateKey });
+      const signedObjects = [];
+      for (let i = 0; i < 5; i++) {
+        signedObjects.push(signed);
+      }
+      await client.createUserCerts(signedObjects);
+    });
+
   });
   describe("get user certificate", () => {
     it ("get issued user certificates", async function() {
+      this.timeout(20 * 1000);
       const userCertificates = await client.getIssuedUserCerts(certId);
-      assert.equal(userCertificates.length, 1);
+      assert.equal(userCertificates.length, 6);
       assert.equal(userCertificates[0].from, validUserCertificate.from);
       assert.equal(userCertificates[0].to, validUserCertificate.to);
       assert.equal(userCertificates[0].certificate.id, validUserCertificate.certId);
       userCertId = userCertificates[0].userCertId;
+      for (let i = 0; i < 5; i++) {
+        assert.equal(userCertificates[1 + i].from, validUserCertificate.from);
+        assert.equal(userCertificates[1 + i].to, validUserCertificate.to);
+        assert.equal(userCertificates[1 + i].certificate.id, validUserCertificate.certId);
+      }
     });
     it ("get received user certificates", async function() {
       this.timeout(20 * 1000);
       const userCertificates = await client.getReceivedUserCerts(validUserCertificate.to);
-      assert.equal(userCertificates.length, 1);
+      assert.equal(userCertificates.length, 6);
       assert.equal(userCertificates[0].from, validUserCertificate.from);
       assert.equal(userCertificates[0].to, validUserCertificate.to);
       assert.equal(userCertificates[0].certificate.id, validUserCertificate.certId);
       assert.equal(userCertificates[0].userCertId, userCertId);
+      for (let i = 0; i < 5; i++) {
+        assert.equal(userCertificates[1 + i].from, validUserCertificate.from);
+        assert.equal(userCertificates[1 + i].to, validUserCertificate.to);
+        assert.equal(userCertificates[1 + i].certificate.id, validUserCertificate.certId);
+      }
     });
     it ("get user certificates", async function() {
+      this.timeout(20 * 1000);
       const userCertificate = await client.getUserCert(userCertId);
       assert.equal(userCertificate.from, validUserCertificate.from);
       assert.equal(userCertificate.to, validUserCertificate.to);

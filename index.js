@@ -62,6 +62,24 @@ class GxCertClient {
       });
     });
   }
+  createUserCerts(signedObjects) {
+    return new Promise((resolve, reject) => {
+      const options = {
+        uri: this.baseUrl + "/userCerts",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        json: signedObjects,
+      }
+      request.post(options, (err, response, body) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
+  }
   async createProfile(address, signedProfile) {
     return new Promise((resolve, reject) => {
       const options = {
@@ -93,6 +111,27 @@ class GxCertClient {
         json: {
           name,
           member: address,
+        },
+      }
+      request.post(options, (err, response, body) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
+  }
+  async disableGroupMember(groupId, signedAddress) {
+    return new Promise((resolve, reject) => {
+      const options = {
+        uri: this.baseUrl + "/disable",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        json: {
+          signedAddress,
+          groupId,
         },
       }
       request.post(options, (err, response, body) => {
