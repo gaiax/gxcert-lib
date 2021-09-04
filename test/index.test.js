@@ -2,7 +2,7 @@ const assert = require("assert");
 const GxCertClient = require("../index");
 const Web3 = require("web3");
 const web3 = new Web3("https://matic-mumbai.chainstacklabs.com");
-const client = new GxCertClient(web3, "0xEbeD13ee7b74Fb9c0dA30A980D3C579B6cAB9A37", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
+const client = new GxCertClient(web3, "0x0B69CF4510bC50d6B8b406a9D63cae436B7dc829", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
 function generatePrivateKey() {
   const chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
   let key = "";
@@ -97,11 +97,11 @@ describe("GxCertClient", () => {
     it ("invite member to group", async function () {
       this.timeout(20 * 1000);
       const targetAddress = charlie.address;
-      const signedMember = await client.signMemberAddress(targetAddress, { privateKey });
+      const signedMember = await client.signMemberAddressForInviting(targetAddress, { privateKey });
       await client.inviteMemberToGroup(groupId, signedMember);
     });
     it("get group", async function () {
-      this.timeout(100 * 1000);
+      this.timeout(20 * 1000);
       const group = await client.getGroup(groupId);
       assert.equal(group.name, "group1");
       assert.equal(group.residence, "residence");
@@ -113,6 +113,23 @@ describe("GxCertClient", () => {
       assert.equal(group.members[1].name, "");
       assert.equal(group.members[1].address, charlie.address);
       assert.equal(group.members[1].icon, "");
+    });
+    it ("disable group member", async function() {
+      this.timeout(20 * 1000);
+      const targetAddress = charlie.address;
+      const signedMember = await client.signMemberAddressForDisabling(targetAddress, { privateKey });
+      await client.disableGroupMember(groupId, signedMember);
+    });
+    it("get group after disabling member", async function () {
+      this.timeout(20 * 1000);
+      const group = await client.getGroup(groupId);
+      assert.equal(group.name, "group1");
+      assert.equal(group.residence, "residence");
+      assert.equal(group.phone, "phone");
+      assert.equal(group.members.length, 1);
+      assert.equal(group.members[0].name, "alice");
+      assert.equal(group.members[0].address, address);
+      assert.equal(group.members[0].icon, validProfile.icon);
     });
   });
   describe("IPFS", () => {
@@ -162,8 +179,6 @@ describe("GxCertClient", () => {
   describe("get certificate", () => {
     it ("get group certificates", async function() {
       this.timeout(20 * 1000);
-      console.log(groupId);
-      console.log(validCertificate);
       const certificates = await client.getGroupCerts(groupId);
       assert.equal(certificates.length, 1);
       assert.equal(certificates[0].title, validCertificate.title);
