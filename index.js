@@ -370,9 +370,14 @@ class GxCertClient {
     }
   }
   async signUserCertificate(userCertificate, accountToSign) {
+    let hexString = userCertificate.certId.toHexString().slice(2);
+    for (let i = 1; i < 128 - hexString.length - 1; i++) {
+      hexString = "0" + hexString;
+    }
+    hexString = "0x" + hexString;
     const hash = web3.utils.soliditySha3({
       type: "string",
-      value: userCertificate.to.toLowerCase() + userCertificate.certId.toString(),
+      value: userCertificate.to.toLowerCase() + hexString,
     });
     let signature;
     if (accountToSign.privateKey) {
