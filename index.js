@@ -372,7 +372,7 @@ class GxCertClient {
   async signUserCertificate(userCertificate, accountToSign) {
     const hash = web3.utils.soliditySha3({
       type: "uint",
-      value: userCertificate.certId,
+      value: userCertificate.to + userCertificate.certId,
     });
     let signature;
     if (accountToSign.privateKey) {
