@@ -101,7 +101,7 @@ class GxCertClient {
       });
     });
   }
-  async createGroup(name, address) {
+  async createGroup(name, residence, phone, address) {
     return new Promise((resolve, reject) => {
       const options = {
         uri: this.baseUrl + "/group",
@@ -110,6 +110,8 @@ class GxCertClient {
         },
         json: {
           name,
+          residence,
+          phone,
           member: address,
         },
       }
@@ -283,9 +285,12 @@ class GxCertClient {
   }
   async getGroup(groupId) {
     const response = await this.contract.methods.getGroup(groupId).call();
-    const memberNames = response[1];
-    const memberIcons = response[2];
-    const memberAddresses = response[3];
+    const residence = response[1];
+    const phone = response[2];
+
+    const memberNames = response[3];
+    const memberIcons = response[4];
+    const memberAddresses = response[5];
     const members = [];
     for (let i = 0; i < memberNames.length; i++) {
       members.push({
@@ -296,6 +301,8 @@ class GxCertClient {
     }
     const group = {
       groupId,
+      residence,
+      phone,
       name: response[0],
       members,
     }
