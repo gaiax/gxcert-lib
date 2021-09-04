@@ -317,10 +317,35 @@ class GxCertClient {
     }
     return groups;
   }
-  async signMemberAddress(address, accountToSign) {
+  async signMemberAddressForInviting(address, accountToSign) {
     const hash = web3.utils.soliditySha3({
       type: "address",
-      value: address,
+      value: "invite:" + address,
+    });
+    let signature;
+    if (accountToSign.privateKey) {
+      signature = await this.web3.eth.accounts.sign(
+        hash,
+        accountToSign.privateKey,
+      ).signature;
+    } else if (accountToSign.address) {
+      signature = await this.web3.eth.personal.sign(
+        hash,
+        accountToSign.address,
+      );
+    } else {
+      throw new Error("It needs an account to sign");
+    }
+    return {
+      signature,
+      address,
+      addressHash: hash,
+    }
+  }
+  async signMemberAddressForDisabling(address, accountToSign) {
+    const hash = web3.utils.soliditySha3({
+      type: "address",
+      value: "disable:" + address,
     });
     let signature;
     if (accountToSign.privateKey) {
