@@ -411,57 +411,27 @@ class GxCertClient {
     };
   }
   async signProfile(profile, accountToSign) {
-    const nameHash = web3.utils.soliditySha3({
+    const hash = web3.utils.soliditySha3({
       type: "string",
-      value: profile.name,
+      value: profile.name + profile.email + profile.icon,
     });
-    const emailHash = web3.utils.soliditySha3({
-      type: "string",
-      value: profile.email,
-    });
-    const iconHash = web3.utils.soliditySha3({
-      type: "string",
-      value: profile.icon,
-    });
-    let nameSignature;
-    let emailSignature;
-    let iconSignature;
+    let signature;
     if (accountToSign.privateKey) {
-      nameSignature = await this.web3.eth.accounts.sign(
-        nameHash,
-        accountToSign.privateKey,
-      ).signature;
-      emailSignature = await this.web3.eth.accounts.sign(
-        emailHash,
-        accountToSign.privateKey,
-      ).signature;
-      iconSignature = await this.web3.eth.accounts.sign(
-        iconHash,
+      signature = await this.web3.eth.accounts.sign(
+        hash,
         accountToSign.privateKey,
       ).signature;
     } else if (accountToSign.address) {
-      nameSignature = await this.web3.eth.personal.sign(
-        nameHash,
-        accountToSign.address,
-      );
-      emailSignature = await this.web3.eth.personal.sign(
-        emailHash,
-        accountToSign.address,
-      );
-      iconSignature = await this.web3.eth.personal.sign(
-        iconHash,
+      signature = await this.web3.eth.personal.sign(
+        hash,
         accountToSign.address,
       );
     } else {
       throw new Error("It needs an account to sign");
     }
     return {
-      nameSignature,
-      emailSignature,
-      iconSignature,
-      nameHash,
-      emailHash,
-      iconHash,
+      signature,
+      hash,
       profile,
     }
   }
