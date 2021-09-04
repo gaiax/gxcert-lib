@@ -136,6 +136,16 @@
         "internalType": "string",
         "name": "name",
         "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "residence",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "phone",
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -347,6 +357,16 @@
       {
         "internalType": "string",
         "name": "_name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_residence",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_phone",
         "type": "string"
       },
       {
@@ -699,6 +719,16 @@
     ],
     "name": "getGroup",
     "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      },
       {
         "internalType": "string",
         "name": "",
