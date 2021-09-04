@@ -319,8 +319,8 @@ class GxCertClient {
   }
   async signMemberAddressForInviting(address, accountToSign) {
     const hash = web3.utils.soliditySha3({
-      type: "address",
-      value: "invite:" + address,
+      type: "string",
+      value: "invite:" + address.toLowerCase(),
     });
     let signature;
     if (accountToSign.privateKey) {
@@ -344,8 +344,8 @@ class GxCertClient {
   }
   async signMemberAddressForDisabling(address, accountToSign) {
     const hash = web3.utils.soliditySha3({
-      type: "address",
-      value: "disable:" + address,
+      type: "string",
+      value: "disable:" + address.toLowerCase(),
     });
     let signature;
     if (accountToSign.privateKey) {
