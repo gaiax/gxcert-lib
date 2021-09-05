@@ -833,6 +833,11 @@
     "name": "getProfile",
     "outputs": [
       {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
         "internalType": "string",
         "name": "",
         "type": "string"
@@ -1337,6 +1342,34 @@
       }
     ],
     "name": "updateGroup",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_email",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_icon",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_sig",
+        "type": "bytes"
+      }
+    ],
+    "name": "updateProfile",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
