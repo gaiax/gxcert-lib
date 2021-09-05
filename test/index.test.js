@@ -2,7 +2,7 @@ const assert = require("assert");
 const GxCertClient = require("../index");
 const Web3 = require("web3");
 const web3 = new Web3("https://matic-mumbai.chainstacklabs.com");
-const client = new GxCertClient(web3, "0x03715841A769117EAbA3e51165898904Cb15644C", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
+const client = new GxCertClient(web3, "0xc5fF867995497133cce2567FDB98577d8797bedD", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
 function generatePrivateKey() {
   const chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
   let key = "";
@@ -38,7 +38,7 @@ const validUserCertificate = {
   to: to.address,
 }
 
-const validProfile = {
+let validProfile = {
   name: "alice",
   email: "alice@example.com",
   icon: "icon",
@@ -74,6 +74,34 @@ describe("GxCertClient", () => {
       assert.equal(profile.email, validProfile.email);
       assert.equal(profile.icon, validProfile.icon);
     });
+    it ("update profile", async function () {
+      this.timeout(20 * 1000);
+      const newProfile = {
+        name: "alice2",
+        email: "email2",
+        icon: "icon2",
+      }
+      const signedProfile = await client.signProfileForUpdating(newProfile, { privateKey });
+      try {
+        await client.updateProfile(signedProfile);
+      } catch(err) {
+        console.error(err);
+        assert.fail();
+        return;
+      }
+      let profile;
+      try {
+        profile = await client.getProfile(address);
+      } catch(err) {
+        console.error(err);
+        assert.fail();
+        return;
+      }
+      assert.equal(profile.name, newProfile.name);
+      assert.equal(profile.email, newProfile.email);
+      assert.equal(profile.icon, newProfile.icon);
+      validProfile = newProfile;
+    });
   });
   describe("Group", async () => {
     it("create group", async function () {
@@ -88,7 +116,7 @@ describe("GxCertClient", () => {
       assert.equal(groups[0].residence, "residence");
       assert.equal(groups[0].phone, "phone");
       assert.equal(groups[0].members.length, 1);
-      assert.equal(groups[0].members[0].name, "alice");
+      assert.equal(groups[0].members[0].name, validProfile.name);
       assert.equal(groups[0].members[0].address, address);
       assert.equal(groups[0].members[0].icon, validProfile.icon);
       groupId = groups[0].groupId;
@@ -107,7 +135,7 @@ describe("GxCertClient", () => {
       assert.equal(group.residence, "residence");
       assert.equal(group.phone, "phone");
       assert.equal(group.members.length, 2);
-      assert.equal(group.members[0].name, "alice");
+      assert.equal(group.members[0].name, validProfile.name);
       assert.equal(group.members[0].address, address);
       assert.equal(group.members[0].icon, validProfile.icon);
       assert.equal(group.members[1].name, "");
@@ -127,7 +155,7 @@ describe("GxCertClient", () => {
       assert.equal(group.residence, "residence");
       assert.equal(group.phone, "phone");
       assert.equal(group.members.length, 1);
-      assert.equal(group.members[0].name, "alice");
+      assert.equal(group.members[0].name, validProfile.name);
       assert.equal(group.members[0].address, address);
       assert.equal(group.members[0].icon, validProfile.icon);
     });

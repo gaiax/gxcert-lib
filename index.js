@@ -80,6 +80,24 @@ class GxCertClient {
       });
     });
   }
+  async updateProfile(signedProfile) {
+    return new Promise((resolve, reject) => {
+      const options = {
+        uri: this.baseUrl + "/profile",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        json: signedProfile,
+      }
+      request.put(options, (err, response, body) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
+  }
   async createProfile(address, signedProfile) {
     return new Promise((resolve, reject) => {
       const options = {
