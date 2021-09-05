@@ -317,6 +317,32 @@ class GxCertClient {
     }
     return groups;
   }
+  async signGroup(group, accountToSign) {
+    const groupId = this.uintToHexString(group.groupId);
+    const hash = web3.utils.soliditySha3({
+      type: "string",
+      value: groupId + group.name + group.residence + group.phone, 
+    });
+    let signature;
+    if (accountToSign.privateKey) {
+      signature = await this.web3.eth.accounts.sign(
+        hash,
+        accountToSign.privateKey,
+      ).signature;
+    } else if (accountToSign.address) {
+      signature = await this.web3.eth.personal.sign(
+        hash,
+        accountToSign.address,
+      );
+    } else {
+      throw new Error("It needs an account to sign");
+    }
+    return {
+      signature,
+      hash,
+      group,
+    }
+  }
   async signMemberAddressForInviting(address, accountToSign) {
     const hash = web3.utils.soliditySha3({
       type: "string",
@@ -394,15 +420,19 @@ class GxCertClient {
       certificate,
     }
   }
-  async signUserCertificate(userCertificate, accountToSign) {
+  uintToHexString(number) {
     let hexString = this.web3.utils.toHex(userCertificate.certId).slice(2);
     for (let i = 1; i < 128 - hexString.length - 1; i++) {
       hexString = "0" + hexString;
     }
     hexString = "0x" + hexString;
+    return hexString;
+  }
+  async signUserCertificate(userCertificate, accountToSign) {
+    let certId = this.uintToHexString(userCertificate.certId);
     const hash = web3.utils.soliditySha3({
       type: "string",
-      value: userCertificate.to.toLowerCase() + hexString,
+      value: userCertificate.to.toLowerCase() + certId,
     });
     let signature;
     if (accountToSign.privateKey) {
