@@ -2,7 +2,7 @@ const assert = require("assert");
 const GxCertClient = require("../index");
 const Web3 = require("web3");
 const web3 = new Web3("https://matic-mumbai.chainstacklabs.com");
-const client = new GxCertClient(web3, "0x0B69CF4510bC50d6B8b406a9D63cae436B7dc829", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
+const client = new GxCertClient(web3, "0x03715841A769117EAbA3e51165898904Cb15644C", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
 function generatePrivateKey() {
   const chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
   let key = "";
@@ -130,6 +130,27 @@ describe("GxCertClient", () => {
       assert.equal(group.members[0].name, "alice");
       assert.equal(group.members[0].address, address);
       assert.equal(group.members[0].icon, validProfile.icon);
+    });
+    it ("update group", async function() {
+      this.timeout(20 * 1000);
+      const group = {
+        groupId,
+        name: "group2",
+        residence: "residence2",
+        phone: "phone2",
+      }
+      const signedGroup = await client.signGroup(group, { privateKey });
+      try {
+        await client.updateGroup(signedGroup);
+      } catch(err) {
+        console.error(err);
+        assert.fail();
+        return;
+      }
+      const _group = await client.getGroup(groupId);
+      assert.equal(_group.name, group.name);
+      assert.equal(_group.residence, group.residence);
+      assert.equal(_group.phone, group.phone);
     });
   });
   describe("IPFS", () => {

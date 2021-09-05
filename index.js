@@ -124,6 +124,24 @@ class GxCertClient {
       });
     });
   }
+  async updateGroup(signedGroup) {
+    return new Promise((resolve, reject) => {
+      const options = {
+        uri: this.baseUrl + "/group",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        json: signedGroup,
+      }
+      request.put(options, (err, response, body) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
+  }
   async disableGroupMember(groupId, signedAddress) {
     return new Promise((resolve, reject) => {
       const options = {
