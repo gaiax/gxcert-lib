@@ -474,10 +474,12 @@ class GxCertClient {
   }
   async getProfile(address) {
     const response = await this.contract.methods.getProfile(address).call();
-    const name = response[0];
-    const email = response[1];
-    const icon = response[2];
+    const profileId = response[0];
+    const name = response[1];
+    const email = response[2];
+    const icon = response[3];
     return {
+      profileId,
       name,
       email,
       icon,
