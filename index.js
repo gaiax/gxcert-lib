@@ -26,6 +26,14 @@ class GxCertClient {
     });
     this.contract = await new this.web3.eth.Contract(abi, this.contractAddress);
   }
+  async getMyAddress() {
+    const accounts = await this.web3.eth.getAccounts();
+    if (accounts.length === 0) {
+      throw new Error("Failed to fetch address."); 
+    }
+    this.address = accounts[0];
+    return this.address;
+  }
   createCert(signed) {
     return new Promise((resolve, reject) => {
       const options = {
