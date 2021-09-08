@@ -363,8 +363,8 @@ class GxCertClient {
   }
   async signUserCertForInvalidation(userCertId, accountToSign) {
     const hash = web3.utils.soliditySha3({
-      type: "uint",
-      value: userCertId,
+      type: "string",
+      value: "invalidate:" + this.uintToHexString(userCertId),
     });
     let signature;
     if (accountToSign.privateKey) {
