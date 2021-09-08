@@ -361,6 +361,31 @@ class GxCertClient {
     }
     return groups;
   }
+  async signUserCertForInvalidation(userCertId, accountToSign) {
+    const hash = web3.utils.soliditySha3({
+      type: "uint",
+      value: userCertId,
+    });
+    let signature;
+    if (accountToSign.privateKey) {
+      signature = await this.web3.eth.accounts.sign(
+        hash,
+        accountToSign.privateKey,
+      ).signature;
+    } else if (accountToSign.address) {
+      signature = await this.web3.eth.personal.sign(
+        hash,
+        accountToSign.address,
+      );
+    } else {
+      throw new Error("It needs an account to sign");
+    }
+    return {
+      signature,
+      hash,
+      userCertId,
+    }
+  }
   async signGroup(group, accountToSign) {
     const groupId = this.uintToHexString(group.groupId);
     const hash = web3.utils.soliditySha3({
