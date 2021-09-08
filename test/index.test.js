@@ -2,7 +2,7 @@ const assert = require("assert");
 const GxCertClient = require("../index");
 const Web3 = require("web3");
 const web3 = new Web3("https://matic-mumbai.chainstacklabs.com");
-const client = new GxCertClient(web3, "0xc5fF867995497133cce2567FDB98577d8797bedD", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
+const client = new GxCertClient(web3, "0xE19F38e0fA7B005E8E62E837B0D79C8558fAd8E0", "http://localhost:5001/gxcert-21233/asia-northeast1/gxcert");
 function generatePrivateKey() {
   const chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
   let key = "";
@@ -61,7 +61,7 @@ describe("GxCertClient", () => {
   describe("Profile", async () => {
     it ("create profile", async function () {
       this.timeout(20 * 1000);
-      const signedProfile = await client.signProfile(validProfile, { privateKey: privateKey });
+      const signedProfile = await client.signProfile(validProfile, { privateKey });
       await client.createProfile(
         address,
         signedProfile,
@@ -306,6 +306,26 @@ describe("GxCertClient", () => {
       assert.equal(userCertificate.to, validUserCertificate.to);
       assert.equal(userCertificate.certificate.id, validUserCertificate.certId);
       assert.equal(userCertificate.userCertId, userCertId);
+    });
+    it ("invalidate user certificate", async function() {
+      this.timeout(20 * 1000);
+      const signedUserCert = await client.signUserCertForInvalidation(userCertId, { privateKey });
+      try {
+        await client.invalidateUserCert(signedUserCert);
+      } catch(err) {
+        console.error(err);
+        assert.fail();
+        return;
+      }
+      let userCertificates;
+      try {
+        userCertificates = await client.getReceivedUserCerts(validUserCertificate.to);
+      } catch(err) {
+        console.error(err);
+        assert.fail();
+        return;
+      }
+      assert.equal(userCertificates.length, 5);
     });
   });
 });

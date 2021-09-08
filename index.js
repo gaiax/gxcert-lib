@@ -52,6 +52,24 @@ class GxCertClient {
       });
     });
   }
+  invalidateUserCert(signed) {
+    return new Promise((resolve, reject) => {
+      const options = {
+        uri: this.baseUrl + "/invalidate",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        json: signed,
+      }
+      request.post(options, (err, response, body) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
+  }
   createUserCert(signed) {
     return new Promise((resolve, reject) => {
       const options = {
