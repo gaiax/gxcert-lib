@@ -14,6 +14,9 @@ class GxCertClient {
     this.web3 = web3;
     this.contractAddress = contractAddress;
     this.baseUrl = baseUrl;
+    this.cache = {
+      profiles: {},
+    }
   }
   isInitialized() {
     return (this.ipfs !== undefined && this.contract !== undefined);
@@ -542,17 +545,22 @@ class GxCertClient {
     }
   }
   async getProfile(address) {
+    if (address in this.cache.profiles) {
+      return this.cache.profiles[address];
+    }
     const response = await this.contract.methods.getProfile(address).call();
     const profileId = response[0];
     const name = response[1];
     const email = response[2];
     const icon = response[3];
-    return {
+    const profile =  {
       profileId,
       name,
       email,
       icon,
     };
+    this.cache.profiles[address] = profile;
+    return profile;
   }
   async signProfile(profile, accountToSign) {
     const hash = web3.utils.soliditySha3({
