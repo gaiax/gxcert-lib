@@ -545,9 +545,6 @@ class GxCertClient {
     }
   }
   async getProfile(address) {
-    if (address in this.cache.profiles) {
-      return this.cache.profiles[address];
-    }
     const response = await this.contract.methods.getProfile(address).call();
     const profileId = response[0];
     const name = response[1];
