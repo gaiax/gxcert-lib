@@ -542,6 +542,9 @@ class GxCertClient {
       throw new Error("It needs an account to sign");
     }
     return {
+      certId,
+      from,
+      tos,
       signature,
       hash,
     }
