@@ -373,6 +373,12 @@ class GxCertClient {
     }
     return group;
   }
+  async getGroupIds(address) {
+    const response = await this.contract.methods.getGroupIds(address).call();
+    return response.map(n => {
+      return parseInt(n);
+    });
+  }
   async getGroups(address) {
     const groups = [];
     const response = await this.contract.methods.getGroupIds(address).call();
