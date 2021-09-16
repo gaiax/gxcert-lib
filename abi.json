@@ -393,14 +393,14 @@
   {
     "inputs": [
       {
-        "internalType": "uint256[]",
-        "name": "_certIds",
-        "type": "uint256[]"
+        "internalType": "uint256",
+        "name": "_certId",
+        "type": "uint256"
       },
       {
-        "internalType": "address[]",
-        "name": "_froms",
-        "type": "address[]"
+        "internalType": "address",
+        "name": "_from",
+        "type": "address"
       },
       {
         "internalType": "address[]",
@@ -408,9 +408,9 @@
         "type": "address[]"
       },
       {
-        "internalType": "bytes[]",
-        "name": "_sigs",
-        "type": "bytes[]"
+        "internalType": "bytes",
+        "name": "_sig",
+        "type": "bytes"
       }
     ],
     "name": "createUserCerts",
