@@ -384,6 +384,12 @@ class GxCertClient {
     }
     return group;
   }
+  async getGroupIds(address) {
+    const response = await this.contract.methods.getGroupIds(address).call();
+    return response.map(n => {
+      return parseInt(n);
+    });
+  }
   async getGroups(address) {
     const groups = [];
     const response = await this.contract.methods.getGroupIds(address).call();
@@ -528,6 +534,37 @@ class GxCertClient {
     }
     hexString = "0x" + hexString;
     return hexString;
+  }
+  async signUserCertificates(certId, from, tos, accountToSign) {
+    let unsigned = this.uintToHexString(certId) + from.toLowerCase();
+    for (const to of tos) {
+      unsigned += to.toLowerCase();
+    }
+    const hash = web3.utils.soliditySha3({
+      type: "string",
+      value: unsigned,
+    });
+    let signature;
+    if (accountToSign.privateKey) {
+      signature = await this.web3.eth.accounts.sign(
+        hash,
+        accountToSign.privateKey,
+      ).signature;
+    } else if (accountToSign.address) {
+      signature = await this.web3.eth.personal.sign(
+        hash,
+        accountToSign.address,
+      );
+    } else {
+      throw new Error("It needs an account to sign");
+    }
+    return {
+      certId,
+      from,
+      tos,
+      signature,
+      hash,
+    }
   }
   async signUserCertificate(userCertificate, accountToSign) {
     let certId = this.uintToHexString(userCertificate.certId);
