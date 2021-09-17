@@ -7,6 +7,7 @@ const EthereumTx = require("ethereumjs-tx").Transaction;
 const request = require("request");
 const abi = require("./abi.json");
 const BufferList = require("bl/BufferList");
+const timeoutSec = 520;
 
 class GxCertClient {
   constructor(web3, contractAddress, baseUrl) {
@@ -46,6 +47,7 @@ class GxCertClient {
         },
         json: signed,
       }
+      setTimeout(resolve, timeoutSec * 1000);
       request.post(options, (err, response, body) => {
         if (err) {
           reject(err);
@@ -64,6 +66,7 @@ class GxCertClient {
         },
         json: signed,
       }
+      setTimeout(resolve, timeoutSec * 1000);
       request.post(options, (err, response, body) => {
         if (err) {
           reject(err);
@@ -82,6 +85,7 @@ class GxCertClient {
         },
         json: signed,
       }
+      setTimeout(resolve, timeoutSec * 1000);
       request.post(options, (err, response, body) => {
         if (err) {
           reject(err);
@@ -100,6 +104,7 @@ class GxCertClient {
         },
         json: signedObjects,
       }
+      setTimeout(resolve, timeoutSec * 1000);
       request.post(options, (err, response, body) => {
         if (err) {
           reject(err);
@@ -118,6 +123,7 @@ class GxCertClient {
         },
         json: signedProfile,
       }
+      setTimeout(resolve, timeoutSec * 1000);
       request.put(options, (err, response, body) => {
         if (err) {
           reject(err);
@@ -139,6 +145,7 @@ class GxCertClient {
           signedProfile,
         },
       }
+      setTimeout(resolve, timeoutSec * 1000);
       request.post(options, (err, response, body) => {
         if (err) {
           reject(err);
@@ -162,6 +169,7 @@ class GxCertClient {
           member: address,
         },
       }
+      setTimeout(resolve, timeoutSec * 1000);
       request.post(options, (err, response, body) => {
         if (err) {
           reject(err);
@@ -180,6 +188,7 @@ class GxCertClient {
         },
         json: signedGroup,
       }
+      setTimeout(resolve, timeoutSec * 1000);
       request.put(options, (err, response, body) => {
         if (err) {
           reject(err);
@@ -201,6 +210,7 @@ class GxCertClient {
           groupId,
         },
       }
+      setTimeout(resolve, timeoutSec * 1000);
       request.post(options, (err, response, body) => {
         if (err) {
           reject(err);
@@ -222,6 +232,7 @@ class GxCertClient {
           groupId,
         },
       }
+      setTimeout(resolve, timeoutSec * 1000);
       request.post(options, (err, response, body) => {
         if (err) {
           reject(err);
