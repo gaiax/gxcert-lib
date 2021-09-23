@@ -270,7 +270,7 @@ class GxCertClient {
     const response = await this.contract.methods.getCert(certId).call();
     const cid = response[0];
     const certificate = JSON.parse(await this.getFile(cid));
-    certificate.id = certId;
+    certificate.certId = certId;
     certificate.cid = cid;
     return certificate;
   }
@@ -280,13 +280,12 @@ class GxCertClient {
     const to = response[1];
     const certId = response[2];
     const timestamp = response[3];
-    const certificate = await this.getCert(certId);
     return {
       userCertId,
       from,
       to,
       timestamp,
-      certificate,
+      certId,
     }
   }
   async getGroupCerts(groupId) {
@@ -340,13 +339,12 @@ class GxCertClient {
     const times = response[4];
     const userCerts = [];
     for (let i = 0; i < certIds.length; i++) {
-      const certificate = await this.getCert(certIds[i]);
       userCerts.push({
+        certId: certIds[i],
         userCertId: userCertIds[i],
         from: froms[i],
         to: tos[i],
         timestamp: times[i],
-        certificate,
       });
     }
     return userCerts;
@@ -356,7 +354,7 @@ class GxCertClient {
     const certId = response[0];
     const certificate = JSON.parse(await this.getFile(cid));
     certificate.cid = cid;
-    certificate.id = certId;
+    certificate.certId = certId;
     return certificate;
   }
   async getGroup(groupId) {
