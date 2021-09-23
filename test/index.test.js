@@ -258,12 +258,12 @@ describe("GxCertClient", () => {
       assert.equal(userCertificates.length, 6);
       assert.equal(userCertificates[0].from, validUserCertificate.from);
       assert.equal(userCertificates[0].to, validUserCertificate.to);
-      assert.equal(userCertificates[0].certificate.certId, validUserCertificate.certId);
+      assert.equal(userCertificates[0].certId, validUserCertificate.certId);
       userCertId = userCertificates[0].userCertId;
       for (let i = 0; i < 5; i++) {
         assert.equal(userCertificates[1 + i].from, validUserCertificate.from);
         assert.equal(userCertificates[1 + i].to, validUserCertificate.to);
-        assert.equal(userCertificates[1 + i].certificate.certId, validUserCertificate.certId);
+        assert.equal(userCertificates[1 + i].certId, validUserCertificate.certId);
       }
     });
     it ("get received user certificates", async function() {

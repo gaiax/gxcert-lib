@@ -319,13 +319,12 @@ class GxCertClient {
     const times = response[4];
     const userCerts = [];
     for (let i = 0; i < certIds.length; i++) {
-      const certificate = await this.getCert(certIds[i]);
       userCerts.push({
         userCertId: userCertIds[i],
         from: froms[i],
         to: tos[i],
         timestamp: times[i],
-        certificate,
+        certId,
       });
     }
     return userCerts;
