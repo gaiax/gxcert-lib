@@ -2,7 +2,7 @@ const assert = require("assert");
 const GxCertClient = require("../index");
 const Web3 = require("web3");
 const web3 = new Web3("https://matic-mumbai.chainstacklabs.com");
-const client = new GxCertClient(web3, "0x759Fdf53c6820ADDf7BEaE7440707E94A6d2A5A9", "https://asia-northeast1-gxcert-21233.cloudfunctions.net/gxcert");
+const client = new GxCertClient(web3, "0x759Fdf53c6820ADDf7BEaE7440707E94A6d2A5A9", "http://127.0.0.1:5001/gxcert-21233/asia-northeast1/gxcert");
 function generatePrivateKey() {
   const chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
   let key = "";
@@ -18,7 +18,8 @@ const privateKey = account.privateKey;
 const address = account.address;
 web3.eth.accounts.privateKeyToAccount(privateKey);
 
-function wait(ms) {
+function wait() {
+  const ms = 10 * 1000;
   return new Promise((resolve, reject) => {
     setTimeout(resolve, ms);
   });
@@ -64,6 +65,7 @@ describe("GxCertClient", () => {
         address,
         signedProfile,
       );
+      await wait();
     });
     it ("get profile", async function() {
       const profile = await client.getProfile(address);
@@ -97,11 +99,13 @@ describe("GxCertClient", () => {
       assert.equal(profile.email, newProfile.email);
       assert.equal(profile.icon, newProfile.icon);
       validProfile = newProfile;
+      await wait();
     });
   });
   describe("Group", async () => {
     it("create group", async function () {
       await client.createGroup("group1", "residence", "phone", address);
+      await wait();
     });
     it ("get groups", async function () {
       let groups = await client.getGroups(address);
@@ -120,6 +124,7 @@ describe("GxCertClient", () => {
       const targetAddress = charlie.address;
       const signedMember = await client.signMemberAddressForInviting(targetAddress, { privateKey });
       await client.inviteMemberToGroup(groupId, signedMember);
+      await wait();
     });
     it("get group", async function () {
       const group = await client.getGroup(groupId);
@@ -138,6 +143,7 @@ describe("GxCertClient", () => {
       const targetAddress = charlie.address;
       const signedMember = await client.signMemberAddressForDisabling(targetAddress, { privateKey });
       await client.disableGroupMember(groupId, signedMember);
+      await wait();
     });
     it("get group after disabling member", async function () {
       const group = await client.getGroup(groupId);
@@ -168,6 +174,7 @@ describe("GxCertClient", () => {
       assert.equal(_group.name, group.name);
       assert.equal(_group.residence, group.residence);
       assert.equal(_group.phone, group.phone);
+      await wait();
     });
   });
   describe("IPFS", () => {
@@ -210,6 +217,7 @@ describe("GxCertClient", () => {
       const signed = await client.signCertificate(validCertificate, { privateKey });
       validCertificateCid = signed.cid;
       await client.createCert(signed);
+      await wait();
     });
   });
   describe("get certificate", () => {
@@ -241,6 +249,7 @@ describe("GxCertClient", () => {
     it ("valid user certificate", async function() {
       const signed = await client.signUserCertificate(validUserCertificate, { privateKey });
       await client.createUserCert(signed);
+      await wait();
     });
     it ("valid user certificates", async function() {
       const tos = [];
@@ -249,6 +258,7 @@ describe("GxCertClient", () => {
       }
       const signed = await client.signUserCertificates(validUserCertificate.certId, validUserCertificate.from, tos, { privateKey });
       await client.createUserCerts(signed);
+      await wait();
     });
 
   });
@@ -304,6 +314,7 @@ describe("GxCertClient", () => {
         return;
       }
       assert.equal(userCertificates.length, 5);
+      await wait();
     });
   });
 });
