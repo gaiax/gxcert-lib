@@ -57,7 +57,7 @@ class GxCertClient {
           reject(new Error("insufficient funds"));
           return;
         }
-        resolve();
+        resolve(body.transactionHash);
       });
     });
   }
@@ -80,7 +80,7 @@ class GxCertClient {
           reject(new Error("insufficient funds"));
           return;
         }
-        resolve();
+        resolve(body.transactionHash);
       });
     });
   }
@@ -103,7 +103,7 @@ class GxCertClient {
           reject(new Error("insufficient funds"));
           return;
         }
-        resolve();
+        resolve(body.transactionHash);
       });
     });
   }
@@ -126,7 +126,7 @@ class GxCertClient {
           reject(new Error("insufficient funds"));
           return;
         }
-        resolve();
+        resolve(body.transactionHash);
       });
     });
   }
@@ -149,7 +149,7 @@ class GxCertClient {
           reject(new Error("insufficient funds"));
           return;
         }
-        resolve();
+        resolve(body.transactionHash);
       });
     });
   }
@@ -175,7 +175,7 @@ class GxCertClient {
           reject(new Error("insufficient funds"));
           return;
         }
-        resolve();
+        resolve(body.transactionHash);
       });
     });
   }
@@ -203,7 +203,7 @@ class GxCertClient {
           reject(new Error("insufficient funds"));
           return;
         }
-        resolve();
+        resolve(body.transactionHash);
       });
     });
   }
@@ -226,7 +226,7 @@ class GxCertClient {
           reject(new Error("insufficient funds"));
           return;
         }
-        resolve();
+        resolve(body.transactionHash);
       });
     });
   }
@@ -252,7 +252,7 @@ class GxCertClient {
           reject(new Error("insufficient funds"));
           return;
         }
-        resolve();
+        resolve(body.transactionHash);
       });
     });
   }
@@ -278,7 +278,7 @@ class GxCertClient {
           reject(new Error("insufficient funds"));
           return;
         }
-        resolve();
+        resolve(body.transactionHash);
       });
     });
   }
