@@ -53,6 +53,10 @@ class GxCertClient {
           reject(err);
           return;
         }
+        if (body.error && body.error.includes("insufficient funds")) {
+          reject(new Error("insufficient funds"));
+          return;
+        }
         resolve();
       });
     });
@@ -70,6 +74,10 @@ class GxCertClient {
       request.post(options, (err, response, body) => {
         if (err) {
           reject(err);
+          return;
+        }
+        if (body.error && body.error.includes("insufficient funds")) {
+          reject(new Error("insufficient funds"));
           return;
         }
         resolve();
@@ -91,6 +99,10 @@ class GxCertClient {
           reject(err);
           return;
         }
+        if (body.error && body.error.includes("insufficient funds")) {
+          reject(new Error("insufficient funds"));
+          return;
+        }
         resolve();
       });
     });
@@ -110,6 +122,10 @@ class GxCertClient {
           reject(err);
           return;
         }
+        if (body.error && body.error.includes("insufficient funds")) {
+          reject(new Error("insufficient funds"));
+          return;
+        }
         resolve();
       });
     });
@@ -127,6 +143,10 @@ class GxCertClient {
       request.put(options, (err, response, body) => {
         if (err) {
           reject(err);
+          return;
+        }
+        if (body.error && body.error.includes("insufficient funds")) {
+          reject(new Error("insufficient funds"));
           return;
         }
         resolve();
@@ -149,6 +169,10 @@ class GxCertClient {
       request.post(options, (err, response, body) => {
         if (err) {
           reject(err);
+          return;
+        }
+        if (body.error && body.error.includes("insufficient funds")) {
+          reject(new Error("insufficient funds"));
           return;
         }
         resolve();
@@ -175,6 +199,10 @@ class GxCertClient {
           reject(err);
           return;
         }
+        if (body.error && body.error.includes("insufficient funds")) {
+          reject(new Error("insufficient funds"));
+          return;
+        }
         resolve();
       });
     });
@@ -192,6 +220,10 @@ class GxCertClient {
       request.put(options, (err, response, body) => {
         if (err) {
           reject(err);
+          return;
+        }
+        if (body.error && body.error.includes("insufficient funds")) {
+          reject(new Error("insufficient funds"));
           return;
         }
         resolve();
@@ -216,6 +248,10 @@ class GxCertClient {
           reject(err);
           return;
         }
+        if (body.error && body.error.includes("insufficient funds")) {
+          reject(new Error("insufficient funds"));
+          return;
+        }
         resolve();
       });
     });
@@ -236,6 +272,10 @@ class GxCertClient {
       request.post(options, (err, response, body) => {
         if (err) {
           reject(err);
+          return;
+        }
+        if (body.error && body.error.includes("insufficient funds")) {
+          reject(new Error("insufficient funds"));
           return;
         }
         resolve();
