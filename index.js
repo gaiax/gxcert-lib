@@ -164,20 +164,6 @@ class GxCertClient {
     certificate.cid = cid;
     return certificate;
   }
-  async getUserCert(userCertId) {
-    const response = await this.contract.methods.getUserCert(userCertId).call();
-    const from = response[0];
-    const to = response[1];
-    const certId = response[2];
-    const timestamp = response[3];
-    return {
-      userCertId,
-      from,
-      to,
-      timestamp,
-      certId,
-    }
-  }
   async getGroupCerts(groupId) {
     const response = await this.contract.methods.getGroupCerts(groupId).call();
     const certIds = response[0];
@@ -238,6 +224,20 @@ class GxCertClient {
     }
     return userCerts;
   }
+  async getUserCert(userCertId) {
+    const response = await this.contract.methods.getUserCert(userCertId).call();
+    const from = response[0];
+    const to = response[1];
+    const certId = response[2];
+    const timestamp = response[3];
+    return {
+      userCertId,
+      from,
+      to,
+      timestamp,
+      certId,
+    }
+  }
   async getCertByCid(cid) {
     const response = await this.contract.methods.getCertByCid(cid).call();
     const certId = response[0];
@@ -285,6 +285,21 @@ class GxCertClient {
       groups.push(group);
     }
     return groups;
+  }
+  async getProfile(address) {
+    const response = await this.contract.methods.getProfile(address).call();
+    const profileId = response[0];
+    const name = response[1];
+    const email = response[2];
+    const icon = response[3];
+    const profile =  {
+      profileId,
+      name,
+      email,
+      icon,
+    };
+    this.cache.profiles[address] = profile;
+    return profile;
   }
   async sign(hash, accountToSign) {
     let signature;
@@ -366,14 +381,6 @@ class GxCertClient {
       certificate,
     }
   }
-  uintToHexString(number) {
-    let hexString = this.web3.utils.toHex(number).slice(2);
-    for (let i = 1; i < 128 - hexString.length - 1; i++) {
-      hexString = "0" + hexString;
-    }
-    hexString = "0x" + hexString;
-    return hexString;
-  }
   async signUserCertificates(certId, from, tos, accountToSign) {
     let unsigned = this.uintToHexString(certId) + from.toLowerCase();
     for (const to of tos) {
@@ -404,21 +411,6 @@ class GxCertClient {
       userCertificate,
       hash,
     }
-  }
-  async getProfile(address) {
-    const response = await this.contract.methods.getProfile(address).call();
-    const profileId = response[0];
-    const name = response[1];
-    const email = response[2];
-    const icon = response[3];
-    const profile =  {
-      profileId,
-      name,
-      email,
-      icon,
-    };
-    this.cache.profiles[address] = profile;
-    return profile;
   }
   async signProfile(profile, accountToSign) {
     const hash = web3.utils.soliditySha3({
@@ -456,6 +448,14 @@ class GxCertClient {
       return false;
     }
     return true;
+  }
+  uintToHexString(number) {
+    let hexString = this.web3.utils.toHex(number).slice(2);
+    for (let i = 1; i < 128 - hexString.length - 1; i++) {
+      hexString = "0" + hexString;
+    }
+    hexString = "0x" + hexString;
+    return hexString;
   }
 }
 
