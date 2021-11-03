@@ -17,23 +17,23 @@ class GxCertClient {
     this.baseUrl = baseUrl;
     this.cache = {
       profiles: {},
-    }
+    };
   }
   isInitialized() {
-    return (this.ipfs !== undefined && this.contract !== undefined);
+    return this.ipfs !== undefined && this.contract !== undefined;
   }
   async init() {
     this.ipfs = IpfsHttpClient({
       host: "ipfs.infura.io",
       port: 5001,
-      protocol: "https"
+      protocol: "https",
     });
     this.contract = await new this.web3.eth.Contract(abi, this.contractAddress);
   }
   async getMyAddress() {
     const accounts = await this.web3.eth.getAccounts();
     if (accounts.length === 0) {
-      throw new Error("Failed to fetch address."); 
+      throw new Error("Failed to fetch address.");
     }
     this.address = accounts[0];
     return this.address;
@@ -43,10 +43,10 @@ class GxCertClient {
       const options = {
         uri: this.baseUrl + endPoint,
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         json: signed,
-      }
+      };
       setTimeout(resolve, timeoutSec * 1000);
       request.post(options, (err, response, body) => {
         if (err) {
@@ -66,10 +66,10 @@ class GxCertClient {
       const options = {
         uri: this.baseUrl + endPoint,
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         json: signed,
-      }
+      };
       setTimeout(resolve, timeoutSec * 1000);
       request.put(options, (err, response, body) => {
         if (err) {
@@ -103,7 +103,7 @@ class GxCertClient {
     const signed = {
       address,
       signedProfile,
-    }
+    };
     return this.postRequest("/profile", signed);
   }
   async createGroup(name, residence, phone, address) {
@@ -112,7 +112,7 @@ class GxCertClient {
       residence,
       phone,
       member: address,
-    }
+    };
     return this.postRequest("/group", signed);
   }
   async updateGroup(signed) {
@@ -122,14 +122,14 @@ class GxCertClient {
     const signed = {
       signedAddress,
       groupId,
-    }
+    };
     return this.postRequest("/disable", signed);
   }
   async inviteMemberToGroup(groupId, signedAddress) {
     const signed = {
       signedAddress,
       groupId,
-    }
+    };
     return this.postRequest("/invite", signed);
   }
   async uploadImageToIpfs(imageBuf) {
@@ -174,7 +174,7 @@ class GxCertClient {
       let certificate;
       try {
         certificate = await this.getCert(certId);
-      } catch(err) {
+      } catch (err) {
         console.error(err);
         continue;
       }
@@ -187,7 +187,9 @@ class GxCertClient {
   }
 
   async getIssuedUserCerts(certId) {
-    const response = await this.contract.methods.getIssuedUserCerts(certId).call();
+    const response = await this.contract.methods
+      .getIssuedUserCerts(certId)
+      .call();
     const froms = response[0];
     const tos = response[1];
     const userCertIds = response[2];
@@ -206,7 +208,9 @@ class GxCertClient {
     return userCerts;
   }
   async getReceivedUserCerts(address) {
-    const response = await this.contract.methods.getReceivedUserCerts(address).call();
+    const response = await this.contract.methods
+      .getReceivedUserCerts(address)
+      .call();
     const froms = response[0];
     const tos = response[1];
     const userCertIds = response[2];
@@ -236,7 +240,7 @@ class GxCertClient {
       to,
       timestamp,
       certId,
-    }
+    };
   }
   async getCertByCid(cid) {
     const response = await this.contract.methods.getCertByCid(cid).call();
@@ -268,12 +272,12 @@ class GxCertClient {
       phone,
       name: response[0],
       members,
-    }
+    };
     return group;
   }
   async getGroupIds(address) {
     const response = await this.contract.methods.getGroupIds(address).call();
-    return response.map(n => {
+    return response.map((n) => {
       return parseInt(n);
     });
   }
@@ -292,7 +296,7 @@ class GxCertClient {
     const name = response[1];
     const email = response[2];
     const icon = response[3];
-    const profile =  {
+    const profile = {
       profileId,
       name,
       email,
@@ -306,12 +310,12 @@ class GxCertClient {
     if (accountToSign.privateKey) {
       signature = await this.web3.eth.accounts.sign(
         hash,
-        accountToSign.privateKey,
+        accountToSign.privateKey
       ).signature;
     } else if (accountToSign.address) {
       signature = await this.web3.eth.personal.sign(
         hash,
-        accountToSign.address,
+        accountToSign.address
       );
     } else {
       throw new Error("It needs an account to sign");
@@ -328,20 +332,20 @@ class GxCertClient {
       signature,
       hash,
       userCertId,
-    }
+    };
   }
   async signGroup(group, accountToSign) {
     const groupId = this.uintToHexString(group.groupId);
     const hash = web3.utils.soliditySha3({
       type: "string",
-      value: groupId + group.name + group.residence + group.phone, 
+      value: groupId + group.name + group.residence + group.phone,
     });
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       hash,
       group,
-    }
+    };
   }
   async signMemberAddressForInviting(address, accountToSign) {
     const hash = web3.utils.soliditySha3({
@@ -353,7 +357,7 @@ class GxCertClient {
       signature,
       address,
       addressHash: hash,
-    }
+    };
   }
   async signMemberAddressForDisabling(address, accountToSign) {
     const hash = web3.utils.soliditySha3({
@@ -365,7 +369,7 @@ class GxCertClient {
       signature,
       address,
       addressHash: hash,
-    }
+    };
   }
   async signCertificate(certificate, accountToSign) {
     const { cid } = await this.uploadCertificateToIpfs(certificate);
@@ -379,7 +383,7 @@ class GxCertClient {
       cidHash: hash,
       cid,
       certificate,
-    }
+    };
   }
   async signUserCertificates(certId, from, tos, accountToSign) {
     let unsigned = this.uintToHexString(certId) + from.toLowerCase();
@@ -397,7 +401,7 @@ class GxCertClient {
       tos,
       signature,
       hash,
-    }
+    };
   }
   async signUserCertificate(userCertificate, accountToSign) {
     let certId = this.uintToHexString(userCertificate.certId);
@@ -410,7 +414,7 @@ class GxCertClient {
       signature,
       userCertificate,
       hash,
-    }
+    };
   }
   async signProfile(profile, accountToSign) {
     const hash = web3.utils.soliditySha3({
@@ -422,7 +426,7 @@ class GxCertClient {
       signature,
       hash,
       profile,
-    }
+    };
   }
   async signProfileForUpdating(profile, accountToSign) {
     const hash = web3.utils.soliditySha3({
@@ -434,16 +438,18 @@ class GxCertClient {
       signature,
       hash,
       profile,
-    }
+    };
   }
   isCertificate(certificate) {
     if (
-      certificate.context === undefined || certificate.context === null
-      || Object.prototype.toString.call(certificate.context) !== "[object Object]"
-      || typeof certificate.title !== "string"
-      || typeof certificate.description !== "string"
-      || typeof certificate.image !== "string"
-      || typeof certificate.groupId !== "number"
+      certificate.context === undefined ||
+      certificate.context === null ||
+      Object.prototype.toString.call(certificate.context) !==
+        "[object Object]" ||
+      typeof certificate.title !== "string" ||
+      typeof certificate.description !== "string" ||
+      typeof certificate.image !== "string" ||
+      typeof certificate.groupId !== "number"
     ) {
       return false;
     }
@@ -458,6 +464,5 @@ class GxCertClient {
     return hexString;
   }
 }
-
 
 module.exports = GxCertClient;
