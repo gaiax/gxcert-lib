@@ -38,10 +38,10 @@ class GxCertClient {
     this.address = accounts[0];
     return this.address;
   }
-  createCert(signed) {
+  postRequest(endPoint, signed) {
     return new Promise((resolve, reject) => {
       const options = {
-        uri: this.baseUrl + "/cert",
+        uri: this.baseUrl + endPoint,
         headers: {
           "Content-Type": "application/json"
         },
@@ -60,227 +60,77 @@ class GxCertClient {
         resolve(body.transactionHash);
       });
     });
+  }
+  putRequest(endPoint, signed) {
+    return new Promise((resolve, reject) => {
+      const options = {
+        uri: this.baseUrl + endPoint,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        json: signed,
+      }
+      setTimeout(resolve, timeoutSec * 1000);
+      request.put(options, (err, response, body) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        if (body.error && body.error.includes("insufficient funds")) {
+          reject(new Error("insufficient funds"));
+          return;
+        }
+        resolve(body.transactionHash);
+      });
+    });
+  }
+  createCert(signed) {
+    return this.postRequest("/cert", signed);
   }
   invalidateUserCert(signed) {
-    return new Promise((resolve, reject) => {
-      const options = {
-        uri: this.baseUrl + "/invalidate",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        json: signed,
-      }
-      setTimeout(resolve, timeoutSec * 1000);
-      request.post(options, (err, response, body) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        if (body.error && body.error.includes("insufficient funds")) {
-          reject(new Error("insufficient funds"));
-          return;
-        }
-        resolve(body.transactionHash);
-      });
-    });
+    return this.postRequest("/invalidate", signed);
   }
   createUserCert(signed) {
-    return new Promise((resolve, reject) => {
-      const options = {
-        uri: this.baseUrl + "/userCert",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        json: signed,
-      }
-      setTimeout(resolve, timeoutSec * 1000);
-      request.post(options, (err, response, body) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        if (body.error && body.error.includes("insufficient funds")) {
-          reject(new Error("insufficient funds"));
-          return;
-        }
-        resolve(body.transactionHash);
-      });
-    });
+    return this.postRequest("/userCert", signed);
   }
-  createUserCerts(signedObjects) {
-    return new Promise((resolve, reject) => {
-      const options = {
-        uri: this.baseUrl + "/userCerts",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        json: signedObjects,
-      }
-      setTimeout(resolve, timeoutSec * 1000);
-      request.post(options, (err, response, body) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        if (body.error && body.error.includes("insufficient funds")) {
-          reject(new Error("insufficient funds"));
-          return;
-        }
-        resolve(body.transactionHash);
-      });
-    });
+  createUserCerts(signed) {
+    return this.postRequest("/userCerts", signed);
   }
-  async updateProfile(signedProfile) {
-    return new Promise((resolve, reject) => {
-      const options = {
-        uri: this.baseUrl + "/profile",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        json: signedProfile,
-      }
-      setTimeout(resolve, timeoutSec * 1000);
-      request.put(options, (err, response, body) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        if (body.error && body.error.includes("insufficient funds")) {
-          reject(new Error("insufficient funds"));
-          return;
-        }
-        resolve(body.transactionHash);
-      });
-    });
+  async updateProfile(signed) {
+    return this.putRequest("/profile", signed);
   }
   async createProfile(address, signedProfile) {
-    return new Promise((resolve, reject) => {
-      const options = {
-        uri: this.baseUrl + "/profile",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        json: {
-          address,
-          signedProfile,
-        },
-      }
-      setTimeout(resolve, timeoutSec * 1000);
-      request.post(options, (err, response, body) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        if (body.error && body.error.includes("insufficient funds")) {
-          reject(new Error("insufficient funds"));
-          return;
-        }
-        resolve(body.transactionHash);
-      });
-    });
+    const signed = {
+      address,
+      signedProfile,
+    }
+    return this.postRequest("/profile", signed);
   }
   async createGroup(name, residence, phone, address) {
-    return new Promise((resolve, reject) => {
-      const options = {
-        uri: this.baseUrl + "/group",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        json: {
-          name,
-          residence,
-          phone,
-          member: address,
-        },
-      }
-      setTimeout(resolve, timeoutSec * 1000);
-      request.post(options, (err, response, body) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        if (body.error && body.error.includes("insufficient funds")) {
-          reject(new Error("insufficient funds"));
-          return;
-        }
-        resolve(body.transactionHash);
-      });
-    });
+    const signed = {
+      name,
+      residence,
+      phone,
+      member: address,
+    }
+    return this.postRequest("/group", signed);
   }
-  async updateGroup(signedGroup) {
-    return new Promise((resolve, reject) => {
-      const options = {
-        uri: this.baseUrl + "/group",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        json: signedGroup,
-      }
-      setTimeout(resolve, timeoutSec * 1000);
-      request.put(options, (err, response, body) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        if (body.error && body.error.includes("insufficient funds")) {
-          reject(new Error("insufficient funds"));
-          return;
-        }
-        resolve(body.transactionHash);
-      });
-    });
+  async updateGroup(signed) {
+    return this.putRequest("/group", signed);
   }
   async disableGroupMember(groupId, signedAddress) {
-    return new Promise((resolve, reject) => {
-      const options = {
-        uri: this.baseUrl + "/disable",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        json: {
-          signedAddress,
-          groupId,
-        },
-      }
-      setTimeout(resolve, timeoutSec * 1000);
-      request.post(options, (err, response, body) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        if (body.error && body.error.includes("insufficient funds")) {
-          reject(new Error("insufficient funds"));
-          return;
-        }
-        resolve(body.transactionHash);
-      });
-    });
+    const signed = {
+      signedAddress,
+      groupId,
+    }
+    return this.postRequest("/disable", signed);
   }
   async inviteMemberToGroup(groupId, signedAddress) {
-    return new Promise((resolve, reject) => {
-      const options = {
-        uri: this.baseUrl + "/invite",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        json: {
-          signedAddress,
-          groupId,
-        },
-      }
-      setTimeout(resolve, timeoutSec * 1000);
-      request.post(options, (err, response, body) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        if (body.error && body.error.includes("insufficient funds")) {
-          reject(new Error("insufficient funds"));
-          return;
-        }
-        resolve(body.transactionHash);
-      });
-    });
+    const signed = {
+      signedAddress,
+      groupId,
+    }
+    return this.post("/invite", signed);
   }
   async uploadImageToIpfs(imageBuf) {
     const cid = await this.ipfs.add(imageBuf);
