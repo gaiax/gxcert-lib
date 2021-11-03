@@ -286,11 +286,7 @@ class GxCertClient {
     }
     return groups;
   }
-  async signUserCertForInvalidation(userCertId, accountToSign) {
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: "invalidate:" + this.uintToHexString(userCertId),
-    });
+  async sign(hash, accountToSign) {
     let signature;
     if (accountToSign.privateKey) {
       signature = await this.web3.eth.accounts.sign(
@@ -305,6 +301,14 @@ class GxCertClient {
     } else {
       throw new Error("It needs an account to sign");
     }
+    return signature;
+  }
+  async signUserCertForInvalidation(userCertId, accountToSign) {
+    const hash = web3.utils.soliditySha3({
+      type: "string",
+      value: "invalidate:" + this.uintToHexString(userCertId),
+    });
+    const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       hash,
@@ -317,20 +321,7 @@ class GxCertClient {
       type: "string",
       value: groupId + group.name + group.residence + group.phone, 
     });
-    let signature;
-    if (accountToSign.privateKey) {
-      signature = await this.web3.eth.accounts.sign(
-        hash,
-        accountToSign.privateKey,
-      ).signature;
-    } else if (accountToSign.address) {
-      signature = await this.web3.eth.personal.sign(
-        hash,
-        accountToSign.address,
-      );
-    } else {
-      throw new Error("It needs an account to sign");
-    }
+    const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       hash,
@@ -342,20 +333,7 @@ class GxCertClient {
       type: "string",
       value: "invite:" + address.toLowerCase(),
     });
-    let signature;
-    if (accountToSign.privateKey) {
-      signature = await this.web3.eth.accounts.sign(
-        hash,
-        accountToSign.privateKey,
-      ).signature;
-    } else if (accountToSign.address) {
-      signature = await this.web3.eth.personal.sign(
-        hash,
-        accountToSign.address,
-      );
-    } else {
-      throw new Error("It needs an account to sign");
-    }
+    const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       address,
@@ -367,20 +345,7 @@ class GxCertClient {
       type: "string",
       value: "disable:" + address.toLowerCase(),
     });
-    let signature;
-    if (accountToSign.privateKey) {
-      signature = await this.web3.eth.accounts.sign(
-        hash,
-        accountToSign.privateKey,
-      ).signature;
-    } else if (accountToSign.address) {
-      signature = await this.web3.eth.personal.sign(
-        hash,
-        accountToSign.address,
-      );
-    } else {
-      throw new Error("It needs an account to sign");
-    }
+    const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       address,
@@ -393,20 +358,7 @@ class GxCertClient {
       type: "string",
       value: cid,
     });
-    let signature;
-    if (accountToSign.privateKey) {
-      signature = await this.web3.eth.accounts.sign(
-        hash,
-        accountToSign.privateKey,
-      ).signature;
-    } else if (accountToSign.address) {
-      signature = await this.web3.eth.personal.sign(
-        hash,
-        accountToSign.address,
-      );
-    } else {
-      throw new Error("It needs an account to sign");
-    }
+    const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       cidHash: hash,
@@ -431,20 +383,7 @@ class GxCertClient {
       type: "string",
       value: unsigned,
     });
-    let signature;
-    if (accountToSign.privateKey) {
-      signature = await this.web3.eth.accounts.sign(
-        hash,
-        accountToSign.privateKey,
-      ).signature;
-    } else if (accountToSign.address) {
-      signature = await this.web3.eth.personal.sign(
-        hash,
-        accountToSign.address,
-      );
-    } else {
-      throw new Error("It needs an account to sign");
-    }
+    const signature = await this.sign(hash, accountToSign);
     return {
       certId,
       from,
@@ -459,20 +398,7 @@ class GxCertClient {
       type: "string",
       value: userCertificate.to.toLowerCase() + certId,
     });
-    let signature;
-    if (accountToSign.privateKey) {
-      signature = await this.web3.eth.accounts.sign(
-        hash,
-        accountToSign.privateKey,
-      ).signature;
-    } else if (accountToSign.address) {
-      signature = await this.web3.eth.personal.sign(
-        hash,
-        accountToSign.address,
-      );
-    } else {
-      throw new Error("It needs an account to sign");
-    }
+    const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       userCertificate,
@@ -499,20 +425,7 @@ class GxCertClient {
       type: "string",
       value: profile.name + profile.email + profile.icon,
     });
-    let signature;
-    if (accountToSign.privateKey) {
-      signature = await this.web3.eth.accounts.sign(
-        hash,
-        accountToSign.privateKey,
-      ).signature;
-    } else if (accountToSign.address) {
-      signature = await this.web3.eth.personal.sign(
-        hash,
-        accountToSign.address,
-      );
-    } else {
-      throw new Error("It needs an account to sign");
-    }
+    const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       hash,
@@ -524,20 +437,7 @@ class GxCertClient {
       type: "string",
       value: "update:" + profile.name + profile.email + profile.icon,
     });
-    let signature;
-    if (accountToSign.privateKey) {
-      signature = await this.web3.eth.accounts.sign(
-        hash,
-        accountToSign.privateKey,
-      ).signature;
-    } else if (accountToSign.address) {
-      signature = await this.web3.eth.personal.sign(
-        hash,
-        accountToSign.address,
-      );
-    } else {
-      throw new Error("It needs an account to sign");
-    }
+    const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       hash,
