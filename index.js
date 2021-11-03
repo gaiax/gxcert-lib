@@ -130,7 +130,7 @@ class GxCertClient {
       signedAddress,
       groupId,
     }
-    return this.post("/invite", signed);
+    return this.postRequest("/invite", signed);
   }
   async uploadImageToIpfs(imageBuf) {
     const cid = await this.ipfs.add(imageBuf);
