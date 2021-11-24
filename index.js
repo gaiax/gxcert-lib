@@ -10,8 +10,8 @@ const BufferList = require("bl/BufferList");
 const timeoutSec = 520;
 
 class GxCertClient {
-  constructor(web3, contractAddress, baseUrl) {
-    this.ipfs = null;
+  constructor(web3, contractAddress, baseUrl, ipfsConfig) {
+    this.ipfs = IpfsHttpClient(ipfsConfig);
     this.web3 = web3;
     this.contractAddress = contractAddress;
     this.baseUrl = baseUrl;
@@ -23,11 +23,6 @@ class GxCertClient {
     return this.ipfs !== undefined && this.contract !== undefined;
   }
   async init() {
-    this.ipfs = IpfsHttpClient({
-      host: "ipfs.infura.io",
-      port: 5001,
-      protocol: "https",
-    });
     this.contract = await new this.web3.eth.Contract(abi, this.contractAddress);
   }
   async getMyAddress() {

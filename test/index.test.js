@@ -5,7 +5,12 @@ const web3 = new Web3("https://matic-mumbai.chainstacklabs.com");
 const client = new GxCertClient(
   web3,
   "0x759Fdf53c6820ADDf7BEaE7440707E94A6d2A5A9",
-  "http://127.0.0.1:5001/gxcert-21233/asia-northeast1/gxcert"
+  "http://127.0.0.1:5001/gxcert-21233/asia-northeast1/gxcert",
+  {
+    host: "ipfs.infura.io",
+    port: 5001,
+    protocol: "https",
+  }
 );
 function generatePrivateKey() {
   const chars = [
