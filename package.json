@@ -10,18 +10,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@truffle/hdwallet-provider": "^1.4.2",
     "bl": "^4.1.0",
+    "ethereumjs-tx": "^2.1.2",
     "firebase": "^8.9.0",
     "ipfs-http-client": "^49.0.1",
     "request": "^2.88.2",
-    "solidity-sha3": "^0.4.1",
     "web3": "^1.4.0"
   },
   "devDependencies": {
     "eslint": "^8.1.0",
     "eslint-config-google": "^0.14.0",
-    "ganache-cli": "^6.12.2",
     "mocha": "^9.0.3",
     "prettier": "^2.4.1"
   }
