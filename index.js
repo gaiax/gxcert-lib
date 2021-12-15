@@ -6,9 +6,10 @@ const request = require("request");
 const abi = require("./abi.json");
 const BufferList = require("bl/BufferList");
 const timeoutSec = 520;
+const axiosBase = require("axios");
 
 class GxCertClient {
-  constructor(web3, contractAddress, baseUrl, ipfsConfig) {
+  constructor(web3, contractAddress, baseUrl, ipfsConfig, ipfsBaseUrlForFetching) {
     this.ipfs = create(ipfsConfig);
     this.web3 = web3;
     this.contractAddress = contractAddress;
@@ -16,6 +17,13 @@ class GxCertClient {
     this.cache = {
       profiles: {},
     };
+    if (!ipfsBaseUrlForFetching) {
+      ipfsBaseUrlForFetching = "http://ipfs.gaiax-blockchain.com:8080/ipfs";
+    }
+    this.axios = axiosBase.create({
+      baseURL: ipfsBaseUrlForFetching,
+      responseType: "json",
+    });
   }
   isInitialized() {
     return this.ipfs !== undefined && this.contract !== undefined;
@@ -129,14 +137,12 @@ class GxCertClient {
     const cid = await this.ipfs.add(imageBuf);
     return cid.path;
   }
+  async upload(json) {
+    const cid = await this.ipfs.add(JSON.stringify(json));
+    return cid.path;
+  }
   async getFile(cid) {
-    for await (const file of this.ipfs.get(cid)) {
-      const content = new BufferList();
-      for await (const chunk of file.content) {
-        content.append(chunk);
-      }
-      return content.toString();
-    }
+    return (await this.axios.get("/" + cid)).data;
   }
   async uploadCertificateToIpfs(certificate) {
     if (!this.isCertificate(certificate)) {
@@ -152,7 +158,7 @@ class GxCertClient {
   async getCert(certId) {
     const response = await this.contract.methods.getCert(certId).call();
     const cid = response[0];
-    const certificate = JSON.parse(await this.getFile(cid));
+    const certificate = await this.getFile(cid);
     certificate.certId = certId;
     certificate.cid = cid;
     return certificate;
@@ -238,7 +244,7 @@ class GxCertClient {
   async getCertByCid(cid) {
     const response = await this.contract.methods.getCertByCid(cid).call();
     const certId = response[0];
-    const certificate = JSON.parse(await this.getFile(cid));
+    const certificate = await this.getFile(cid);
     certificate.cid = cid;
     certificate.certId = certId;
     return certificate;
