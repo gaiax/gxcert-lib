@@ -1,4 +1,4 @@
-const IpfsHttpClient = require("ipfs-http-client");
+const { create } = require("ipfs-http-client");
 const Web3 = require("web3");
 const web3 = new Web3();
 const EthereumTx = require("ethereumjs-tx").Transaction;
@@ -9,7 +9,7 @@ const timeoutSec = 520;
 
 class GxCertClient {
   constructor(web3, contractAddress, baseUrl, ipfsConfig) {
-    this.ipfs = IpfsHttpClient(ipfsConfig);
+    this.ipfs = create(ipfsConfig);
     this.web3 = web3;
     this.contractAddress = contractAddress;
     this.baseUrl = baseUrl;

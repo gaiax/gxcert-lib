@@ -13,7 +13,7 @@
     "bl": "^4.1.0",
     "ethereumjs-tx": "^2.1.2",
     "firebase": "^8.9.0",
-    "ipfs-http-client": "^49.0.1",
+    "ipfs-http-client": "^54.0.2",
     "request": "^2.88.2",
     "web3": "^1.4.0"
   },
