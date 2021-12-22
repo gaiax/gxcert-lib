@@ -4,7 +4,7 @@ const Web3 = require("web3");
 const web3 = new Web3("https://matic-mumbai.chainstacklabs.com");
 const client = new GxCertClient(
   web3,
-  "0x917989f57bBCF20379F563Ef9f2d6dddbe512181",
+  "0xA7decdC6c8FbE55478b9184b62C910Bdb4cb5E20",
   "http://127.0.0.1:5001/gxcert-21233/asia-northeast1/gxcert",
   {
     host: "ipfs.gaiax-blockchain.com",
