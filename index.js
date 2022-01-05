@@ -31,7 +31,7 @@ class GxCertClient {
   }
 
   keccak256(...args) {
-    return this.web3.sha3(args.map(arg => {
+    return this.web3.utils.sha3(args.map(arg => {
       if (typeof arg === "string") {
         if (arg.substring(0, 2) === "0x") {
           return arg.slice(2);
