@@ -331,10 +331,7 @@ class GxCertClient {
     return signature;
   }
   async signUserCertForInvalidation(userCertId, accountToSign) {
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: "invalidate:" + this.uintToHexString(userCertId),
-    });
+    const hash = this.keccak256("invalidate:", userCertId);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
@@ -344,10 +341,7 @@ class GxCertClient {
   }
   async signGroup(group, accountToSign) {
     const groupId = this.uintToHexString(group.groupId);
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: groupId + group.name + group.residence + group.phone,
-    });
+    const hash = this.keccak256(group.groupId, group.name, group.residence, group.phone);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
@@ -356,10 +350,7 @@ class GxCertClient {
     };
   }
   async signMemberAddressForInviting(address, accountToSign) {
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: "invite:" + address.toLowerCase(),
-    });
+    const hash = this.keccak256("invite:", address.toLowerCase());
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
@@ -368,10 +359,7 @@ class GxCertClient {
     };
   }
   async signMemberAddressForDisabling(address, accountToSign) {
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: "disable:" + address.toLowerCase(),
-    });
+    const hash = this.keccak256("disable:", address.toLowerCase());
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
@@ -381,10 +369,7 @@ class GxCertClient {
   }
   async signCertificate(certificate, accountToSign) {
     const { cid } = await this.uploadCertificateToIpfs(certificate);
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: cid,
-    });
+    const hash = this.keccak256(cid);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
@@ -394,14 +379,11 @@ class GxCertClient {
     };
   }
   async signUserCertificates(certId, from, tos, accountToSign) {
-    let unsigned = this.uintToHexString(certId) + from.toLowerCase();
+    const unsigned = [certId, from.toLowerCase()];
     for (const to of tos) {
-      unsigned += to.toLowerCase();
+      unsigned.push(to.toLowerCase());
     }
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: unsigned,
-    });
+    const hash = this.keccak256(...unsigned);
     const signature = await this.sign(hash, accountToSign);
     return {
       certId,
@@ -413,10 +395,7 @@ class GxCertClient {
   }
   async signUserCertificate(userCertificate, accountToSign) {
     let certId = this.uintToHexString(userCertificate.certId);
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: userCertificate.to.toLowerCase() + certId,
-    });
+    const hash = this.keccak256(userCertificate.to.toLowerCase(), userCertificate.certId);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
@@ -425,10 +404,7 @@ class GxCertClient {
     };
   }
   async signProfile(profile, accountToSign) {
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: profile.name + profile.email + profile.icon,
-    });
+    const hash = this.keccak256(profile.name, profile.email, profile.icon);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
@@ -437,10 +413,7 @@ class GxCertClient {
     };
   }
   async signProfileForUpdating(profile, accountToSign) {
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: "update:" + profile.name + profile.email + profile.icon,
-    });
+    const hash = this.keccak256("update:", profile.name, profile.email, profile.icon);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
