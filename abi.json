@@ -142,8 +142,13 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "groupId",
         "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "isActive",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -267,6 +272,11 @@
         "type": "string"
       },
       {
+        "internalType": "bytes32",
+        "name": "nonce",
+        "type": "bytes32"
+      },
+      {
         "internalType": "bytes",
         "name": "_sig",
         "type": "bytes"
@@ -340,6 +350,11 @@
         "type": "string"
       },
       {
+        "internalType": "bytes32",
+        "name": "nonce",
+        "type": "bytes32"
+      },
+      {
         "internalType": "bytes",
         "name": "_sig",
         "type": "bytes"
@@ -372,6 +387,11 @@
         "internalType": "address",
         "name": "_to",
         "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "nonce",
+        "type": "bytes32"
       },
       {
         "internalType": "bytes",
@@ -408,6 +428,11 @@
         "type": "address[]"
       },
       {
+        "internalType": "bytes32",
+        "name": "nonce",
+        "type": "bytes32"
+      },
+      {
         "internalType": "bytes",
         "name": "_sig",
         "type": "bytes"
@@ -429,6 +454,11 @@
         "internalType": "address",
         "name": "_address",
         "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "nonce",
+        "type": "bytes32"
       },
       {
         "internalType": "bytes",
@@ -517,30 +547,6 @@
         "internalType": "string",
         "name": "",
         "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_cid",
-        "type": "string"
-      }
-    ],
-    "name": "getCertByCid",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       },
       {
         "internalType": "uint256",
@@ -854,6 +860,11 @@
         "type": "uint256"
       },
       {
+        "internalType": "bytes32",
+        "name": "nonce",
+        "type": "bytes32"
+      },
+      {
         "internalType": "bytes",
         "name": "_sig",
         "type": "bytes"
@@ -875,6 +886,11 @@
         "internalType": "address",
         "name": "_address",
         "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "nonce",
+        "type": "bytes32"
       },
       {
         "internalType": "bytes",
@@ -919,63 +935,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "target",
-        "type": "address"
-      }
-    ],
-    "name": "makeHash",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "target",
-        "type": "string"
-      }
-    ],
-    "name": "makeHash",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "target",
-        "type": "uint256"
-      }
-    ],
-    "name": "makeHash",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "value",
         "type": "uint256"
@@ -1015,6 +974,11 @@
         "type": "string"
       },
       {
+        "internalType": "bytes32",
+        "name": "nonce",
+        "type": "bytes32"
+      },
+      {
         "internalType": "bytes",
         "name": "_sig",
         "type": "bytes"
@@ -1041,6 +1005,11 @@
         "internalType": "string",
         "name": "_icon",
         "type": "string"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "nonce",
+        "type": "bytes32"
       },
       {
         "internalType": "bytes",
