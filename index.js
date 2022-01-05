@@ -31,19 +31,29 @@ class GxCertClient {
   }
 
   keccak256(...args) {
-    return this.web3.utils.sha3(args.map(arg => {
+    const values = args.map(arg => {
       if (typeof arg === "string") {
         if (arg.substring(0, 2) === "0x") {
-          return arg.slice(2);
+          return {
+            type: "address",
+            value: arg,
+          };
         } else {
-          return web3.utils.fromAscii(arg).slice(2);
+          return {
+            type: "string",
+            value: arg,
+          };
         }
       } else if (typeof arg === "number") {
-        return leftPad((arg).toString(16), 64, 0);
+        return {
+          type: "uint256",
+          value: arg,
+        }
       } else {
-        return "";
+        return arg;
       }
-    }).join(""), { encoding: "hex" });
+    });
+    return this.web3.utils.soliditySha3(...values);
   }
   async init() {
     this.contract = await new this.web3.eth.Contract(abi, this.contractAddress);
@@ -394,7 +404,6 @@ class GxCertClient {
     };
   }
   async signUserCertificate(userCertificate, accountToSign) {
-    let certId = this.uintToHexString(userCertificate.certId);
     const hash = this.keccak256(userCertificate.to.toLowerCase(), userCertificate.certId);
     const signature = await this.sign(hash, accountToSign);
     return {
