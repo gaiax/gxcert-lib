@@ -341,58 +341,69 @@ class GxCertClient {
     return signature;
   }
   async signUserCertForInvalidation(userCertId, accountToSign) {
-    const hash = this.keccak256("invalidate:", userCertId);
+    const nonce = this.web3.utils.randomHex(32);
+    const hash = this.keccak256("invalidate:", userCertId, nonce);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       hash,
       userCertId,
+      nonce,
     };
   }
   async signGroup(group, accountToSign) {
-    const groupId = this.uintToHexString(group.groupId);
-    const hash = this.keccak256(group.groupId, group.name, group.residence, group.phone);
+    const nonce = this.web3.utils.randomHex(32);
+    const hash = this.keccak256(group.groupId, group.name, group.residence, group.phone, nonce);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       hash,
       group,
+      nonce,
     };
   }
   async signMemberAddressForInviting(address, accountToSign) {
-    const hash = this.keccak256("invite:", address.toLowerCase());
+    const nonce = this.web3.utils.randomHex(32);
+    const hash = this.keccak256("invite:", address.toLowerCase(), nonce);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       address,
       addressHash: hash,
+      nonce,
     };
   }
   async signMemberAddressForDisabling(address, accountToSign) {
-    const hash = this.keccak256("disable:", address.toLowerCase());
+    const nonce = this.web3.utils.randomHex(32);
+    const hash = this.keccak256("disable:", address.toLowerCase(), nonce);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       address,
       addressHash: hash,
+      nonce,
     };
   }
   async signCertificate(certificate, accountToSign) {
+    const nonce = this.web3.utils.randomHex(32);
     const { cid } = await this.uploadCertificateToIpfs(certificate);
-    const hash = this.keccak256(cid);
+    const hash = this.keccak256(cid, nonce);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       cidHash: hash,
       cid,
       certificate,
+      nonce,
     };
   }
   async signUserCertificates(certId, from, tos, accountToSign) {
+    const nonce = this.web3.utils.randomHex(32);
     const unsigned = [certId, from.toLowerCase()];
     for (const to of tos) {
       unsigned.push(to.toLowerCase());
     }
+    unsigned.push(nonce);
     const hash = this.keccak256(...unsigned);
     const signature = await this.sign(hash, accountToSign);
     return {
@@ -401,33 +412,40 @@ class GxCertClient {
       tos,
       signature,
       hash,
+      nonce,
     };
   }
   async signUserCertificate(userCertificate, accountToSign) {
-    const hash = this.keccak256(userCertificate.to.toLowerCase(), userCertificate.certId);
+    const nonce = this.web3.utils.randomHex(32);
+    const hash = this.keccak256(userCertificate.to.toLowerCase(), userCertificate.certId, nonce);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       userCertificate,
       hash,
+      nonce,
     };
   }
   async signProfile(profile, accountToSign) {
-    const hash = this.keccak256(profile.name, profile.email, profile.icon);
+    const nonce = this.web3.utils.randomHex(32);
+    const hash = this.keccak256(profile.name, profile.email, profile.icon, nonce);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       hash,
       profile,
+      nonce,
     };
   }
   async signProfileForUpdating(profile, accountToSign) {
-    const hash = this.keccak256("update:", profile.name, profile.email, profile.icon);
+    const nonce = this.web3.utils.randomHex(32);
+    const hash = this.keccak256("update:", profile.name, profile.email, profile.icon, nonce);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       hash,
       profile,
+      nonce,
     };
   }
   isCertificate(certificate) {
