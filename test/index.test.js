@@ -291,13 +291,6 @@ describe("GxCertClient", () => {
       assert.equal(certificate.description, validCertificate.description);
       assert.equal(certificate.image, validCertificate.image);
     });
-    it("get certificate by cid", async function () {
-      const certificate = await client.getCertByCid(validCertificateCid);
-      assert.equal(certificate.certId, certId);
-      assert.equal(certificate.title, validCertificate.title);
-      assert.equal(certificate.description, validCertificate.description);
-      assert.equal(certificate.image, validCertificate.image);
-    });
   });
   describe("createUserCert", () => {
     it("valid user certificate", async function () {

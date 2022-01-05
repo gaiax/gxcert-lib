@@ -241,14 +241,6 @@ class GxCertClient {
       certId,
     };
   }
-  async getCertByCid(cid) {
-    const response = await this.contract.methods.getCertByCid(cid).call();
-    const certId = response[0];
-    const certificate = await this.getFile(cid);
-    certificate.cid = cid;
-    certificate.certId = certId;
-    return certificate;
-  }
   async getGroup(groupId) {
     const response = await this.contract.methods.getGroup(groupId).call();
     const residence = response[1];
