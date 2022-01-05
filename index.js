@@ -36,7 +36,7 @@ class GxCertClient {
         if (arg.substring(0, 2) === "0x") {
           return arg.slice(2);
         } else {
-          return web3.fromAscii(arg).slice(2);
+          return web3.utils.fromAscii(arg).slice(2);
         }
       } else if (typeof arg === "number") {
         return leftPad((arg).toString(16), 64, 0);
