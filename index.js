@@ -7,6 +7,7 @@ const abi = require("./abi.json");
 const BufferList = require("bl/BufferList");
 const timeoutSec = 520;
 const axiosBase = require("axios");
+const leftPad = require("left-pad");
 
 class GxCertClient {
   constructor(web3, contractAddress, baseUrl, ipfsConfig, ipfsBaseUrlForFetching) {
@@ -27,6 +28,22 @@ class GxCertClient {
   }
   isInitialized() {
     return this.ipfs !== undefined && this.contract !== undefined;
+  }
+
+  keccak256(...args) {
+    return this.web3.sha3(args.map(arg => {
+      if (typeof arg === "string") {
+        if (arg.substring(0, 2) === "0x") {
+          return arg.slice(2);
+        } else {
+          return web3.fromAscii(arg).slice(2);
+        }
+      } else if (typeof arg === "number") {
+        return leftPad((arg).toString(16), 64, 0);
+      } else {
+        return "";
+      }
+    }).join(""), { encoding: "hex" });
   }
   async init() {
     this.contract = await new this.web3.eth.Contract(abi, this.contractAddress);
