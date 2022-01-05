@@ -33,7 +33,7 @@ class GxCertClient {
   keccak256(...args) {
     const values = args.map(arg => {
       if (typeof arg === "string") {
-        if (arg.substring(0, 2) === "0x") {
+        if (arg.substring(0, 2) === "0x" && arg.length === 42) {
           return {
             type: "address",
             value: arg,
