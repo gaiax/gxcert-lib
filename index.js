@@ -325,12 +325,10 @@ class GxCertClient {
     const response = await this.contract.methods.getProfile(address).call();
     const profileId = response[0];
     const name = response[1];
-    const email = response[2];
-    const icon = response[3];
+    const icon = response[2];
     const profile = {
       profileId,
       name,
-      email,
       icon,
     };
     this.cache.profiles[address] = profile;
@@ -441,7 +439,7 @@ class GxCertClient {
   }
   async signProfile(profile, accountToSign) {
     const nonce = this.web3.utils.randomHex(32);
-    const hash = this.keccak256(profile.name, profile.email, profile.icon, nonce);
+    const hash = this.keccak256(profile.name, profile.icon, nonce);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
@@ -452,7 +450,7 @@ class GxCertClient {
   }
   async signProfileForUpdating(profile, accountToSign) {
     const nonce = this.web3.utils.randomHex(32);
-    const hash = this.keccak256("update:", profile.name, profile.email, profile.icon, nonce);
+    const hash = this.keccak256("update:", profile.name, profile.icon, nonce);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,

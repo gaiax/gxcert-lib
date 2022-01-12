@@ -67,7 +67,6 @@ const validUserCertificate = {
 
 let validProfile = {
   name: "alice",
-  email: "alice@example.com",
   icon: "icon",
 };
 let validCertificateCid;
@@ -111,13 +110,11 @@ describe("GxCertClient", () => {
     it("get profile", async function () {
       const profile = await client.getProfile(address);
       assert.equal(profile.name, validProfile.name);
-      assert.equal(profile.email, validProfile.email);
       assert.equal(profile.icon, validProfile.icon);
     });
     it("update profile", async function () {
       const newProfile = {
         name: "alice2",
-        email: "email2",
         icon: "icon2",
       };
       const signedProfile = await client.signProfileForUpdating(newProfile, {
@@ -139,7 +136,6 @@ describe("GxCertClient", () => {
         return;
       }
       assert.equal(profile.name, newProfile.name);
-      assert.equal(profile.email, newProfile.email);
       assert.equal(profile.icon, newProfile.icon);
       validProfile = newProfile;
       await wait();
