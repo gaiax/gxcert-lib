@@ -363,7 +363,7 @@ class GxCertClient {
     if (_nonce) {
       nonce = _nonce;
     }
-    const hash = this.keccak256(group.groupId, group.name, group.residence, group.phone, nonce);
+    const hash = this.keccak256(group.name, group.residence, group.phone, nonce);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
