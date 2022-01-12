@@ -146,13 +146,7 @@ class GxCertClient {
     };
     return this.postRequest("/profile", signed);
   }
-  async createGroup(name, residence, phone, address) {
-    const signed = {
-      name,
-      residence,
-      phone,
-      member: address,
-    };
+  async createGroup(signed) {
     return this.postRequest("/group", signed);
   }
   async updateGroup(signed) {
@@ -370,6 +364,20 @@ class GxCertClient {
       nonce = _nonce;
     }
     const hash = this.keccak256(group.groupId, group.name, group.residence, group.phone, nonce);
+    const signature = await this.sign(hash, accountToSign);
+    return {
+      signature,
+      hash,
+      group,
+      nonce,
+    };
+  }
+  async signGroupForUpdating(group, accountToSign, _nonce) {
+    let nonce = this.web3.utils.randomHex(32);
+    if (_nonce) {
+      nonce = _nonce;
+    }
+    const hash = this.keccak256("update:", group.groupId, group.name, group.residence, group.phone, nonce);
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,

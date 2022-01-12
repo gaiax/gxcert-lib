@@ -142,8 +142,24 @@ describe("GxCertClient", () => {
     });
   });
   describe("Group", async () => {
+    let _nonce = null;
     it("create group", async function () {
-      await client.createGroup("group1", "residence", "phone", address);
+      const group = {
+        name: "group1",
+        residence: "residence",
+        phone: "phone",
+      }
+      const signedGroup = await client.signGroup(group, {
+        privateKey,
+      });
+      try {
+        await client.createGroup("group1", "residence", "phone", address);
+      } catch(err) {
+        console.error(err);
+        expect.fail();
+        return;
+      }
+      _nonce = signedGroup.nonce;
       await wait();
     });
     it("get groups", async function () {
@@ -207,7 +223,7 @@ describe("GxCertClient", () => {
         residence: "residence2",
         phone: "phone2",
       };
-      const signedGroup = await client.signGroup(group, { privateKey });
+      const signedGroup = await client.signGroupForUpdating(group, { privateKey });
       try {
         await client.updateGroup(signedGroup);
       } catch (err) {
