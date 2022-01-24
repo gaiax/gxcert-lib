@@ -503,7 +503,16 @@ class GxCertClient {
     if (_nonce) {
       nonce = _nonce;
     }
-    const unsigned = [certId, from.toLowerCase()];
+    const unsigned = [
+      {
+        type: "uint256",
+        value: certId
+      },
+      {
+        type: "address",
+        value: from.toLowerCase()
+      }
+    ];
     for (const to of tos) {
       unsigned.push({
         type: "address",
