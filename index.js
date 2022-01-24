@@ -426,7 +426,7 @@ class GxCertClient {
         },
         { 
           type: "address",
-          value: address
+          value: address.toLowerCase()
         },
         {
           type: "bytes32",
@@ -507,7 +507,7 @@ class GxCertClient {
     for (const to of tos) {
       unsigned.push({
         type: "address",
-        value: to
+        value: to.toLowerCase()
       });
     }
     unsigned.push({
@@ -534,7 +534,7 @@ class GxCertClient {
       [
         {
           type: "address",
-          value: userCertificate.to
+          value: userCertificate.to.toLowerCase()
         },
         {
           type: "uint256",
