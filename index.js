@@ -30,7 +30,8 @@ class GxCertClient {
     return this.ipfs !== undefined && this.contract !== undefined;
   }
 
-  keccak256(...args) {
+  keccak256(args) {
+    /*
     const values = args.map(arg => {
       if (typeof arg === "string") {
         if (arg.substring(0, 2) === "0x") {
@@ -65,7 +66,8 @@ class GxCertClient {
         return arg;
       }
     });
-    return this.web3.utils.soliditySha3(...values);
+    */
+    return this.web3.utils.soliditySha3(args);
   }
   async init() {
     this.contract = await new this.web3.eth.Contract(abi, this.contractAddress);
@@ -349,7 +351,22 @@ class GxCertClient {
     if (_nonce) {
       nonce = _nonce;
     }
-    const hash = this.keccak256("invalidate:", userCertId, nonce);
+    const hash = this.keccak256(
+      [
+        {
+          type: "string",
+          value: "invalidate:"
+        },
+        {
+          type: "uint256",
+          value: userCertId
+        },
+        {
+          type: "bytes32", 
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
@@ -363,7 +380,26 @@ class GxCertClient {
     if (_nonce) {
       nonce = _nonce;
     }
-    const hash = this.keccak256(group.name, group.residence, group.phone, nonce);
+    const hash = this.keccak256(
+      [
+        {
+          type: "string",
+          value: group.name
+        },
+        {
+          type: "string",
+          value: group.residence
+        },
+        {
+          type: "string",
+          value: group.phone
+        },
+        {
+          type: "bytes32",
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
@@ -377,7 +413,34 @@ class GxCertClient {
     if (_nonce) {
       nonce = _nonce;
     }
-    const hash = this.keccak256("update:", group.groupId, group.name, group.residence, group.phone, nonce);
+    const hash = this.keccak256(
+      [
+        {
+          type: "string",
+          value: "update:"
+        },
+        {
+          type: "uint256",
+          value: group.groupId
+        },
+        {
+          type: "string",
+          value: group.name
+        },
+        {
+          type: "string",
+          value: group.residence
+        },
+        {
+          type: "string", 
+          value: group.phone
+        },
+        {
+          type: "bytes32",
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
@@ -391,7 +454,22 @@ class GxCertClient {
     if (_nonce) {
       nonce = _nonce;
     }
-    const hash = this.keccak256("invite:", address.toLowerCase(), nonce);
+    const hash = this.keccak256(
+      [
+        {
+          type: "string",
+          value: "invite:"
+        },
+        { 
+          type: "address",
+          value: address
+        },
+        {
+          type: "bytes32",
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
@@ -405,7 +483,22 @@ class GxCertClient {
     if (_nonce) {
       nonce = _nonce;
     }
-    const hash = this.keccak256("disable:", address.toLowerCase(), nonce);
+    const hash = this.keccak256(
+      [
+        {
+          type: "string",
+          value: "disable:"
+        },
+        {
+          type: "address",
+          value: address
+        },
+        {
+          type: "bytes32",
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
@@ -420,7 +513,18 @@ class GxCertClient {
       nonce = _nonce;
     }
     const { cid } = await this.uploadCertificateToIpfs(certificate);
-    const hash = this.keccak256(cid, nonce);
+    const hash = this.keccak256(
+      [
+        {
+          type: "string",
+          value: cid
+        },
+        {
+          type: "bytes32",
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
@@ -437,10 +541,16 @@ class GxCertClient {
     }
     const unsigned = [certId, from.toLowerCase()];
     for (const to of tos) {
-      unsigned.push(to.toLowerCase());
+      unsigned.push({
+        type: "address",
+        value: to
+      });
     }
-    unsigned.push(nonce);
-    const hash = this.keccak256(...unsigned);
+    unsigned.push({
+      type: "bytes32",
+      value: nonce
+    });
+    const hash = this.keccak256(unsigned);
     const signature = await this.sign(hash, accountToSign);
     return {
       certId,
@@ -456,7 +566,22 @@ class GxCertClient {
     if (_nonce) {
       nonce = _nonce;
     }
-    const hash = this.keccak256(userCertificate.to.toLowerCase(), userCertificate.certId, nonce);
+    const hash = this.keccak256(
+      [
+        {
+          type: "address",
+          value: userCertificate.to
+        },
+        {
+          type: "uint256",
+          value: userCertificate.certId
+        }, 
+        {
+          type: "bytes32",
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
@@ -470,7 +595,22 @@ class GxCertClient {
     if (_nonce) {
       nonce = _nonce;
     }
-    const hash = this.keccak256(profile.name, profile.icon, nonce);
+    const hash = this.keccak256(
+      [
+        {
+          type: "string",
+          value: profile.name
+        }, 
+        {
+          type: "string",
+          value: profile.icon
+        },
+        {
+          type: "bytes32",
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
@@ -484,7 +624,26 @@ class GxCertClient {
     if (_nonce) {
       nonce = _nonce;
     }
-    const hash = this.keccak256("update:", profile.name, profile.icon, nonce);
+    const hash = this.keccak256(
+      [
+        {
+          type: "string",
+          value: "update:"
+        },
+        {
+          type: "string",
+          value: profile.name
+        },
+        {
+          type: "string",
+          value: profile.icon
+        },
+        {
+          type: "bytes32",
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
