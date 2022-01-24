@@ -74,11 +74,6 @@
       },
       {
         "internalType": "string",
-        "name": "email",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
         "name": "icon",
         "type": "string"
       }
@@ -138,34 +133,20 @@
         "type": "uint256"
       }
     ],
-    "name": "addressToGroupIds",
+    "name": "addressToGroupMembers",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "groupId",
         "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "isActive",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "addressToString",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -190,44 +171,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "value",
-        "type": "bytes32"
-      }
-    ],
-    "name": "bytes32ToString",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
-      }
-    ],
-    "name": "bytesToString",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -267,6 +210,11 @@
         "type": "string"
       },
       {
+        "internalType": "bytes32",
+        "name": "_nonce",
+        "type": "bytes32"
+      },
+      {
         "internalType": "bytes",
         "name": "_sig",
         "type": "bytes"
@@ -286,6 +234,11 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      },
+      {
         "internalType": "string",
         "name": "_name",
         "type": "string"
@@ -301,9 +254,14 @@
         "type": "string"
       },
       {
-        "internalType": "address",
-        "name": "_address",
-        "type": "address"
+        "internalType": "bytes32",
+        "name": "_nonce",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_sig",
+        "type": "bytes"
       }
     ],
     "name": "createGroup",
@@ -331,13 +289,13 @@
       },
       {
         "internalType": "string",
-        "name": "_email",
+        "name": "_icon",
         "type": "string"
       },
       {
-        "internalType": "string",
-        "name": "_icon",
-        "type": "string"
+        "internalType": "bytes32",
+        "name": "_nonce",
+        "type": "bytes32"
       },
       {
         "internalType": "bytes",
@@ -374,6 +332,11 @@
         "type": "address"
       },
       {
+        "internalType": "bytes32",
+        "name": "_nonce",
+        "type": "bytes32"
+      },
+      {
         "internalType": "bytes",
         "name": "_sig",
         "type": "bytes"
@@ -408,6 +371,11 @@
         "type": "address[]"
       },
       {
+        "internalType": "bytes32",
+        "name": "_nonce",
+        "type": "bytes32"
+      },
+      {
         "internalType": "bytes",
         "name": "_sig",
         "type": "bytes"
@@ -429,6 +397,11 @@
         "internalType": "address",
         "name": "_address",
         "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_nonce",
+        "type": "bytes32"
       },
       {
         "internalType": "bytes",
@@ -530,32 +503,8 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "_cid",
-        "type": "string"
-      }
-    ],
-    "name": "getCertByCid",
-    "outputs": [
-      {
         "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "groupId",
+        "name": "_groupId",
         "type": "uint256"
       }
     ],
@@ -701,11 +650,6 @@
         "internalType": "string",
         "name": "",
         "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -788,7 +732,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "certId",
+        "name": "_certId",
         "type": "uint256"
       }
     ],
@@ -854,6 +798,11 @@
         "type": "uint256"
       },
       {
+        "internalType": "bytes32",
+        "name": "_nonce",
+        "type": "bytes32"
+      },
+      {
         "internalType": "bytes",
         "name": "_sig",
         "type": "bytes"
@@ -877,6 +826,11 @@
         "type": "address"
       },
       {
+        "internalType": "bytes32",
+        "name": "_nonce",
+        "type": "bytes32"
+      },
+      {
         "internalType": "bytes",
         "name": "_sig",
         "type": "bytes"
@@ -891,7 +845,7 @@
     "inputs": [
       {
         "internalType": "bytes32",
-        "name": "hash",
+        "name": "_hash",
         "type": "bytes32"
       },
       {
@@ -901,7 +855,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "groupId",
+        "name": "_groupId",
         "type": "uint256"
       }
     ],
@@ -914,82 +868,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "target",
-        "type": "address"
-      }
-    ],
-    "name": "makeHash",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "target",
-        "type": "string"
-      }
-    ],
-    "name": "makeHash",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "target",
-        "type": "uint256"
-      }
-    ],
-    "name": "makeHash",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
-      }
-    ],
-    "name": "uintToString",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -1015,6 +893,11 @@
         "type": "string"
       },
       {
+        "internalType": "bytes32",
+        "name": "_nonce",
+        "type": "bytes32"
+      },
+      {
         "internalType": "bytes",
         "name": "_sig",
         "type": "bytes"
@@ -1034,13 +917,13 @@
       },
       {
         "internalType": "string",
-        "name": "_email",
+        "name": "_icon",
         "type": "string"
       },
       {
-        "internalType": "string",
-        "name": "_icon",
-        "type": "string"
+        "internalType": "bytes32",
+        "name": "_nonce",
+        "type": "bytes32"
       },
       {
         "internalType": "bytes",

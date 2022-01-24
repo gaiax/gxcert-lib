@@ -7,6 +7,7 @@ const abi = require("./abi.json");
 const BufferList = require("bl/BufferList");
 const timeoutSec = 520;
 const axiosBase = require("axios");
+const leftPad = require("left-pad");
 
 class GxCertClient {
   constructor(web3, contractAddress, baseUrl, ipfsConfig, ipfsBaseUrlForFetching) {
@@ -27,6 +28,10 @@ class GxCertClient {
   }
   isInitialized() {
     return this.ipfs !== undefined && this.contract !== undefined;
+  }
+
+  keccak256(args) {
+    return this.web3.utils.soliditySha3(...args);
   }
   async init() {
     this.contract = await new this.web3.eth.Contract(abi, this.contractAddress);
@@ -107,13 +112,7 @@ class GxCertClient {
     };
     return this.postRequest("/profile", signed);
   }
-  async createGroup(name, residence, phone, address) {
-    const signed = {
-      name,
-      residence,
-      phone,
-      member: address,
-    };
+  async createGroup(signed) {
     return this.postRequest("/group", signed);
   }
   async updateGroup(signed) {
@@ -241,14 +240,6 @@ class GxCertClient {
       certId,
     };
   }
-  async getCertByCid(cid) {
-    const response = await this.contract.methods.getCertByCid(cid).call();
-    const certId = response[0];
-    const certificate = await this.getFile(cid);
-    certificate.cid = cid;
-    certificate.certId = certId;
-    return certificate;
-  }
   async getGroup(groupId) {
     const response = await this.contract.methods.getGroup(groupId).call();
     const residence = response[1];
@@ -293,12 +284,10 @@ class GxCertClient {
     const response = await this.contract.methods.getProfile(address).call();
     const profileId = response[0];
     const name = response[1];
-    const email = response[2];
-    const icon = response[3];
+    const icon = response[2];
     const profile = {
       profileId,
       name,
-      email,
       icon,
     };
     this.cache.profiles[address] = profile;
@@ -321,78 +310,221 @@ class GxCertClient {
     }
     return signature;
   }
-  async signUserCertForInvalidation(userCertId, accountToSign) {
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: "invalidate:" + this.uintToHexString(userCertId),
-    });
+  async signUserCertForInvalidation(userCertId, accountToSign, _nonce) {
+    let nonce = this.web3.utils.randomHex(32);
+    if (_nonce) {
+      nonce = _nonce;
+    }
+    const hash = this.keccak256(
+      [
+        {
+          type: "string",
+          value: "invalidate:"
+        },
+        {
+          type: "uint256",
+          value: userCertId
+        },
+        {
+          type: "bytes32", 
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       hash,
       userCertId,
+      nonce,
     };
   }
-  async signGroup(group, accountToSign) {
-    const groupId = this.uintToHexString(group.groupId);
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: groupId + group.name + group.residence + group.phone,
-    });
+  async signGroup(group, address, accountToSign, _nonce) {
+    let nonce = this.web3.utils.randomHex(32);
+    if (_nonce) {
+      nonce = _nonce;
+    }
+    const hash = this.keccak256(
+      [
+        {
+          type: "string",
+          value: group.name
+        },
+        {
+          type: "string",
+          value: group.residence
+        },
+        {
+          type: "string",
+          value: group.phone
+        },
+        {
+          type: "bytes32",
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       hash,
       group,
+      nonce,
+      address,
     };
   }
-  async signMemberAddressForInviting(address, accountToSign) {
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: "invite:" + address.toLowerCase(),
-    });
+  async signGroupForUpdating(group, accountToSign, _nonce) {
+    let nonce = this.web3.utils.randomHex(32);
+    if (_nonce) {
+      nonce = _nonce;
+    }
+    const hash = this.keccak256(
+      [
+        {
+          type: "string",
+          value: "update:"
+        },
+        {
+          type: "uint256",
+          value: group.groupId
+        },
+        {
+          type: "string",
+          value: group.name
+        },
+        {
+          type: "string",
+          value: group.residence
+        },
+        {
+          type: "string", 
+          value: group.phone
+        },
+        {
+          type: "bytes32",
+          value: nonce
+        }
+      ]
+    );
+    const signature = await this.sign(hash, accountToSign);
+    return {
+      signature,
+      hash,
+      group,
+      nonce,
+    };
+  }
+  async signMemberAddressForInviting(address, accountToSign, _nonce) {
+    let nonce = this.web3.utils.randomHex(32);
+    if (_nonce) {
+      nonce = _nonce;
+    }
+    const hash = this.keccak256(
+      [
+        {
+          type: "string",
+          value: "invite:"
+        },
+        { 
+          type: "address",
+          value: address.toLowerCase()
+        },
+        {
+          type: "bytes32",
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       address,
       addressHash: hash,
+      nonce,
     };
   }
-  async signMemberAddressForDisabling(address, accountToSign) {
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: "disable:" + address.toLowerCase(),
-    });
+  async signMemberAddressForDisabling(address, accountToSign, _nonce) {
+    let nonce = this.web3.utils.randomHex(32);
+    if (_nonce) {
+      nonce = _nonce;
+    }
+    const hash = this.keccak256(
+      [
+        {
+          type: "string",
+          value: "disable:"
+        },
+        {
+          type: "address",
+          value: address
+        },
+        {
+          type: "bytes32",
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       address,
       addressHash: hash,
+      nonce,
     };
   }
-  async signCertificate(certificate, accountToSign) {
+  async signCertificate(certificate, accountToSign, _nonce) {
+    let nonce = this.web3.utils.randomHex(32);
+    if (_nonce) {
+      nonce = _nonce;
+    }
     const { cid } = await this.uploadCertificateToIpfs(certificate);
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: cid,
-    });
+    const hash = this.keccak256(
+      [
+        {
+          type: "string",
+          value: cid
+        },
+        {
+          type: "bytes32",
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       cidHash: hash,
       cid,
       certificate,
+      nonce,
     };
   }
-  async signUserCertificates(certId, from, tos, accountToSign) {
-    let unsigned = this.uintToHexString(certId) + from.toLowerCase();
-    for (const to of tos) {
-      unsigned += to.toLowerCase();
+  async signUserCertificates(certId, from, tos, accountToSign, _nonce) {
+    let nonce = this.web3.utils.randomHex(32);
+    if (_nonce) {
+      nonce = _nonce;
     }
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: unsigned,
+    const unsigned = [
+      {
+        type: "uint256",
+        value: certId
+      },
+      {
+        type: "address",
+        value: from.toLowerCase()
+      }
+    ];
+    for (const to of tos) {
+      unsigned.push({
+        type: "address",
+        value: to.toLowerCase()
+      });
+    }
+    unsigned.push({
+      type: "bytes32",
+      value: nonce
     });
+    const hash = this.keccak256(unsigned);
     const signature = await this.sign(hash, accountToSign);
     return {
       certId,
@@ -400,43 +532,98 @@ class GxCertClient {
       tos,
       signature,
       hash,
+      nonce,
     };
   }
-  async signUserCertificate(userCertificate, accountToSign) {
-    let certId = this.uintToHexString(userCertificate.certId);
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: userCertificate.to.toLowerCase() + certId,
-    });
+  async signUserCertificate(userCertificate, accountToSign, _nonce) {
+    let nonce = this.web3.utils.randomHex(32);
+    if (_nonce) {
+      nonce = _nonce;
+    }
+    const hash = this.keccak256(
+      [
+        {
+          type: "address",
+          value: userCertificate.to.toLowerCase()
+        },
+        {
+          type: "uint256",
+          value: userCertificate.certId
+        }, 
+        {
+          type: "bytes32",
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       userCertificate,
       hash,
+      nonce,
     };
   }
-  async signProfile(profile, accountToSign) {
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: profile.name + profile.email + profile.icon,
-    });
+  async signProfile(profile, accountToSign, _nonce) {
+    let nonce = this.web3.utils.randomHex(32);
+    if (_nonce) {
+      nonce = _nonce;
+    }
+    const hash = this.keccak256(
+      [
+        {
+          type: "string",
+          value: profile.name
+        }, 
+        {
+          type: "string",
+          value: profile.icon
+        },
+        {
+          type: "bytes32",
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       hash,
       profile,
+      nonce,
     };
   }
-  async signProfileForUpdating(profile, accountToSign) {
-    const hash = web3.utils.soliditySha3({
-      type: "string",
-      value: "update:" + profile.name + profile.email + profile.icon,
-    });
+  async signProfileForUpdating(profile, accountToSign, _nonce) {
+    let nonce = this.web3.utils.randomHex(32);
+    if (_nonce) {
+      nonce = _nonce;
+    }
+    const hash = this.keccak256(
+      [
+        {
+          type: "string",
+          value: "update:"
+        },
+        {
+          type: "string",
+          value: profile.name
+        },
+        {
+          type: "string",
+          value: profile.icon
+        },
+        {
+          type: "bytes32",
+          value: nonce
+        }
+      ]
+    );
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
       hash,
       profile,
+      nonce,
     };
   }
   isCertificate(certificate) {
