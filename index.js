@@ -339,7 +339,7 @@ class GxCertClient {
       nonce,
     };
   }
-  async signGroup(group, accountToSign, _nonce) {
+  async signGroup(group, address, accountToSign, _nonce) {
     let nonce = this.web3.utils.randomHex(32);
     if (_nonce) {
       nonce = _nonce;
@@ -370,6 +370,7 @@ class GxCertClient {
       hash,
       group,
       nonce,
+      address,
     };
   }
   async signGroupForUpdating(group, accountToSign, _nonce) {

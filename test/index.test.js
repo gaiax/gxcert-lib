@@ -4,7 +4,7 @@ const Web3 = require("web3");
 const web3 = new Web3("https://matic-mumbai.chainstacklabs.com");
 const client = new GxCertClient(
   web3,
-  "0xA7decdC6c8FbE55478b9184b62C910Bdb4cb5E20",
+  "0x93A62c0bDF73cB2843453daA55890E5f4Fae2A57",
   "http://127.0.0.1:5001/gxcert-21233/asia-northeast1/gxcert",
   {
     host: "ipfs.gaiax-blockchain.com",
@@ -45,7 +45,7 @@ const address = account.address;
 web3.eth.accounts.privateKeyToAccount(privateKey);
 
 function wait() {
-  const ms = 10 * 1000;
+  const ms = 30 * 1000;
   return new Promise((resolve, reject) => {
     setTimeout(resolve, ms);
   });
@@ -149,11 +149,11 @@ describe("GxCertClient", () => {
         residence: "residence",
         phone: "phone",
       }
-      const signedGroup = await client.signGroup(group, {
+      const signedGroup = await client.signGroup(group, address, {
         privateKey,
       });
       try {
-        await client.createGroup("group1", "residence", "phone", address);
+        await client.createGroup(signedGroup);
       } catch(err) {
         console.error(err);
         expect.fail();
