@@ -45,7 +45,7 @@ const address = account.address;
 web3.eth.accounts.privateKeyToAccount(privateKey);
 
 function wait() {
-  const ms = 30 * 1000;
+  const ms = 10 * 1000;
   return new Promise((resolve, reject) => {
     setTimeout(resolve, ms);
   });
@@ -93,7 +93,7 @@ describe("GxCertClient", () => {
       try {
         json = await client.getFile(cid);
       } catch(err) {
-        console.log(err);
+        console.error(err);
       }
       console.log(json);
       assert.equal(json.hello, "world");
