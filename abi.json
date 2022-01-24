@@ -133,7 +133,7 @@
         "type": "uint256"
       }
     ],
-    "name": "addressToGroupIds",
+    "name": "addressToGroupMembers",
     "outputs": [
       {
         "internalType": "uint256",
@@ -211,7 +211,7 @@
       },
       {
         "internalType": "bytes32",
-        "name": "nonce",
+        "name": "_nonce",
         "type": "bytes32"
       },
       {
@@ -255,7 +255,7 @@
       },
       {
         "internalType": "bytes32",
-        "name": "nonce",
+        "name": "_nonce",
         "type": "bytes32"
       },
       {
@@ -294,7 +294,7 @@
       },
       {
         "internalType": "bytes32",
-        "name": "nonce",
+        "name": "_nonce",
         "type": "bytes32"
       },
       {
@@ -333,7 +333,7 @@
       },
       {
         "internalType": "bytes32",
-        "name": "nonce",
+        "name": "_nonce",
         "type": "bytes32"
       },
       {
@@ -372,7 +372,7 @@
       },
       {
         "internalType": "bytes32",
-        "name": "nonce",
+        "name": "_nonce",
         "type": "bytes32"
       },
       {
@@ -400,7 +400,7 @@
       },
       {
         "internalType": "bytes32",
-        "name": "nonce",
+        "name": "_nonce",
         "type": "bytes32"
       },
       {
@@ -504,7 +504,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "groupId",
+        "name": "_groupId",
         "type": "uint256"
       }
     ],
@@ -732,7 +732,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "certId",
+        "name": "_certId",
         "type": "uint256"
       }
     ],
@@ -799,7 +799,7 @@
       },
       {
         "internalType": "bytes32",
-        "name": "nonce",
+        "name": "_nonce",
         "type": "bytes32"
       },
       {
@@ -827,7 +827,7 @@
       },
       {
         "internalType": "bytes32",
-        "name": "nonce",
+        "name": "_nonce",
         "type": "bytes32"
       },
       {
@@ -845,7 +845,7 @@
     "inputs": [
       {
         "internalType": "bytes32",
-        "name": "hash",
+        "name": "_hash",
         "type": "bytes32"
       },
       {
@@ -855,7 +855,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "groupId",
+        "name": "_groupId",
         "type": "uint256"
       }
     ],
@@ -894,7 +894,7 @@
       },
       {
         "internalType": "bytes32",
-        "name": "nonce",
+        "name": "_nonce",
         "type": "bytes32"
       },
       {
@@ -922,7 +922,7 @@
       },
       {
         "internalType": "bytes32",
-        "name": "nonce",
+        "name": "_nonce",
         "type": "bytes32"
       },
       {
