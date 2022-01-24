@@ -31,43 +31,7 @@ class GxCertClient {
   }
 
   keccak256(args) {
-    /*
-    const values = args.map(arg => {
-      if (typeof arg === "string") {
-        if (arg.substring(0, 2) === "0x") {
-          if (arg.length === 42) {
-            return {
-              type: "address",
-              value: arg,
-            };
-          } else if (arg.length === 66) {
-            return {
-              type: "bytes32",
-              value: arg,
-            }
-          } else {
-            return {
-              type: "bytes",
-              value: arg,
-            }
-          }
-        } else {
-          return {
-            type: "string",
-            value: arg,
-          };
-        }
-      } else if (typeof arg === "number") {
-        return {
-          type: "uint256",
-          value: arg,
-        }
-      } else {
-        return arg;
-      }
-    });
-    */
-    return this.web3.utils.soliditySha3(args);
+    return this.web3.utils.soliditySha3(...args);
   }
   async init() {
     this.contract = await new this.web3.eth.Contract(abi, this.contractAddress);
