@@ -200,7 +200,7 @@ class GxCertClient {
         from: froms[i],
         to: tos[i],
         timestamp: times[i],
-        certId,
+        certId: parseInt(certId),
       });
     }
     return userCerts;
