@@ -8,6 +8,7 @@ const BufferList = require("bl/BufferList");
 const timeoutSec = 520;
 const axiosBase = require("axios");
 const leftPad = require("left-pad");
+const IpfsKeeper = require("ipfs-keeper");
 
 class GxCertClient {
   constructor(web3, contractAddress, baseUrl, ipfsConfig, ipfsBaseUrlForFetching) {
@@ -15,6 +16,7 @@ class GxCertClient {
     this.web3 = web3;
     this.contractAddress = contractAddress;
     this.baseUrl = baseUrl;
+    this.ipfsKeeper = new IpfsKeeper();
     this.cache = {
       profiles: {},
     };
@@ -34,6 +36,7 @@ class GxCertClient {
     return this.web3.utils.soliditySha3(...args);
   }
   async init() {
+    await this.ipfsKeeper.init();
     this.contract = await new this.web3.eth.Contract(abi, this.contractAddress);
   }
   async getMyAddress() {
@@ -132,23 +135,50 @@ class GxCertClient {
     };
     return this.postRequest("/invite", signed);
   }
-  async uploadImageToIpfs(imageBuf) {
+  async uploadImageToIpfs(imageBuf, keep) {
     const cid = await this.ipfs.add(imageBuf);
+    if (keep) {
+      this.ipfsKeeper.keep([
+        cid.path,
+      ]).then(() => {
+        
+      }).catch(err => {
+        console.error(err);
+      });;
+    }
     return cid.path;
   }
-  async upload(json) {
+  async upload(json, keep) {
     const cid = await this.ipfs.add(JSON.stringify(json));
+    if (keep) {
+      this.ipfsKeeper.keep([
+        cid.path,
+      ]).then(() => {
+        
+      }).catch(err => {
+        console.error(err);
+      });;
+    }
     return cid.path;
   }
   async getFile(cid) {
     return (await this.axios.get("/" + cid)).data;
   }
-  async uploadCertificateToIpfs(certificate) {
+  async uploadCertificateToIpfs(certificate, keep) {
     if (!this.isCertificate(certificate)) {
       throw new Error("The certificate is invalid.");
     }
     const json = JSON.stringify(certificate);
     const cid = await this.ipfs.add(json);
+    if (keep) {
+      this.ipfsKeeper.keep([
+        cid.path,
+      ]).then(() => {
+        
+      }).catch(err => {
+        console.error(err);
+      });;
+    }
     return {
       cid: cid.path,
       certificate,
