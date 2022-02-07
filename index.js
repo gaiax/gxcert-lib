@@ -135,50 +135,35 @@ class GxCertClient {
     };
     return this.postRequest("/invite", signed);
   }
-  async uploadImageToIpfs(imageBuf, keep) {
+  keep(cid) {
+    this.ipfsKeeper.keep([
+      cid.path,
+    ]).then(() => {
+      console.log("keep cid: " + cid);
+    }).catch(err => {
+      console.error(err);
+    });;
+  }
+  async uploadImageToIpfs(imageBuf) {
     const cid = await this.ipfs.add(imageBuf);
-    if (keep) {
-      this.ipfsKeeper.keep([
-        cid.path,
-      ]).then(() => {
-        
-      }).catch(err => {
-        console.error(err);
-      });;
-    }
+    this.keep(cid.path);
     return cid.path;
   }
-  async upload(json, keep) {
+  async upload(json) {
     const cid = await this.ipfs.add(JSON.stringify(json));
-    if (keep) {
-      this.ipfsKeeper.keep([
-        cid.path,
-      ]).then(() => {
-        
-      }).catch(err => {
-        console.error(err);
-      });;
-    }
+    this.keep(cid.path);
     return cid.path;
   }
   async getFile(cid) {
     return (await this.axios.get("/" + cid)).data;
   }
-  async uploadCertificateToIpfs(certificate, keep) {
+  async uploadCertificateToIpfs(certificate) {
     if (!this.isCertificate(certificate)) {
       throw new Error("The certificate is invalid.");
     }
     const json = JSON.stringify(certificate);
     const cid = await this.ipfs.add(json);
-    if (keep) {
-      this.ipfsKeeper.keep([
-        cid.path,
-      ]).then(() => {
-        
-      }).catch(err => {
-        console.error(err);
-      });;
-    }
+    this.keep(cid.path);
     return {
       cid: cid.path,
       certificate,
@@ -188,8 +173,13 @@ class GxCertClient {
     const response = await this.contract.methods.getCert(certId).call();
     const cid = response[0];
     const certificate = await this.getFile(cid);
+    if (!this.isCertificate(certificate)){
+      throw new Error("The certificate doesn't follow valid format.");
+    }
     certificate.certId = certId;
     certificate.cid = cid;
+    this.keep(cid);
+    this.keep(certificate.image);
     return certificate;
   }
   async getGroupCerts(groupId) {
@@ -204,9 +194,6 @@ class GxCertClient {
         certificate = await this.getCert(certId);
       } catch (err) {
         console.error(err);
-        continue;
-      }
-      if (!this.isCertificate(certificate)) {
         continue;
       }
       certificates.push(certificate);
