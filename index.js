@@ -139,7 +139,7 @@ class GxCertClient {
   keep(cid) {
     if (this.keepsCid) {
       this.ipfsKeeper.keep([
-        cid.path,
+        cid,
       ]).then(() => {
         console.log("keep cid: " + cid);
       }).catch(err => {
