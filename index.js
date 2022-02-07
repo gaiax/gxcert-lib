@@ -11,12 +11,13 @@ const leftPad = require("left-pad");
 const IpfsKeeper = require("ipfs-keeper");
 
 class GxCertClient {
-  constructor(web3, contractAddress, baseUrl, ipfsConfig, ipfsBaseUrlForFetching) {
+  constructor(web3, contractAddress, baseUrl, ipfsConfig, ipfsBaseUrlForFetching, keepsCid) {
     this.ipfs = create(ipfsConfig);
     this.web3 = web3;
     this.contractAddress = contractAddress;
     this.baseUrl = baseUrl;
     this.ipfsKeeper = new IpfsKeeper();
+    this.keepsCid = keepsCid;
     this.cache = {
       profiles: {},
     };
@@ -136,13 +137,15 @@ class GxCertClient {
     return this.postRequest("/invite", signed);
   }
   keep(cid) {
-    this.ipfsKeeper.keep([
-      cid.path,
-    ]).then(() => {
-      console.log("keep cid: " + cid);
-    }).catch(err => {
-      console.error(err);
-    });;
+    if (this.keepsCid) {
+      this.ipfsKeeper.keep([
+        cid.path,
+      ]).then(() => {
+        console.log("keep cid: " + cid);
+      }).catch(err => {
+        console.error(err);
+      });
+    }
   }
   async uploadImageToIpfs(imageBuf) {
     const cid = await this.ipfs.add(imageBuf);
