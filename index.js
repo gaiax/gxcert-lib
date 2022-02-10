@@ -22,7 +22,7 @@ class GxCertClient {
       profiles: {},
     };
     if (!ipfsBaseUrlForFetching) {
-      ipfsBaseUrlForFetching = "http://ipfs.gaiax-blockchain.com:8080/ipfs";
+      ipfsBaseUrlForFetching = "https://ipfs.gaiax-blockchain.com/ipfs";
     }
     this.axios = axiosBase.create({
       baseURL: ipfsBaseUrlForFetching,
