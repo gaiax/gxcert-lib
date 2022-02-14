@@ -174,30 +174,35 @@ class GxCertClient {
   }
   async getCert(certId) {
     const response = await this.contract.methods.getCert(certId).call();
-    const cid = response[0];
-    const certificate = await this.getFile(cid);
-    if (!this.isCertificate(certificate)){
-      throw new Error("The certificate doesn't follow valid format.");
+    const title = response[0];
+    const description = response[1];
+    const image = response[2];
+    const certificate = {
+      certId,
+      title,
+      description,
+      image,
     }
-    certificate.certId = certId;
-    certificate.cid = cid;
-    this.keep(cid);
     this.keep(certificate.image);
     return certificate;
   }
   async getGroupCerts(groupId) {
     const response = await this.contract.methods.getGroupCerts(groupId).call();
     const certIds = response[0];
-    const cids = response[1];
+    const titles = response[1];
+    const descriptions = response[2];
+    const images = response[3];
     const certificates = [];
     for (let i = 0; i < certIds.length; i++) {
       const certId = certIds[i];
-      let certificate;
-      try {
-        certificate = await this.getCert(certId);
-      } catch (err) {
-        console.error(err);
-        continue;
+      const title = titles[i];
+      const description = descriptions[i];
+      const image = images[3];
+      const certificate = {
+        certId,
+        title,
+        description,
+        image,
       }
       certificates.push(certificate);
     }
