@@ -497,12 +497,19 @@ class GxCertClient {
     if (_nonce) {
       nonce = _nonce;
     }
-    const { cid } = await this.uploadCertificateToIpfs(certificate);
     const hash = this.keccak256(
       [
         {
           type: "string",
-          value: cid
+          value: certificate.title,
+        },
+        {
+          type: "string",
+          value: certificate.description,
+        },
+        {
+          type: "string",
+          value: certificate.image,
         },
         {
           type: "bytes32",
@@ -513,8 +520,6 @@ class GxCertClient {
     const signature = await this.sign(hash, accountToSign);
     return {
       signature,
-      cidHash: hash,
-      cid,
       certificate,
       nonce,
     };
