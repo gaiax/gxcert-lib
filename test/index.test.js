@@ -304,6 +304,7 @@ describe("GxCertClient", () => {
       assert.equal(certificate.title, validCertificate.title);
       assert.equal(certificate.description, validCertificate.description);
       assert.equal(certificate.image, validCertificate.image);
+      assert.equal(certificate.groupId, groupId);
     });
   });
   describe("createUserCert", () => {
