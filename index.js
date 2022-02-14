@@ -177,8 +177,10 @@ class GxCertClient {
     const title = response[0];
     const description = response[1];
     const image = response[2];
+    const groupId = parseInt(response[3]);
     const certificate = {
       certId,
+      groupId,
       title,
       description,
       image,
