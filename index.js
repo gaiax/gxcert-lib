@@ -197,7 +197,7 @@ class GxCertClient {
       const certId = certIds[i];
       const title = titles[i];
       const description = descriptions[i];
-      const image = images[3];
+      const image = images[i];
       const certificate = {
         certId,
         title,
