@@ -18,7 +18,7 @@
     "ipfs-keeper": "github:gaiax/ipfs-keeper",
     "left-pad": "^1.3.0",
     "request": "^2.88.2",
-    "web3": "^1.4.0"
+    "web3": "^1.7.0"
   },
   "devDependencies": {
     "eslint": "^8.1.0",
