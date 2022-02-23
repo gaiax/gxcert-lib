@@ -9,6 +9,7 @@ const timeoutSec = 520;
 const axiosBase = require("axios");
 const leftPad = require("left-pad");
 const IpfsKeeper = require("ipfs-keeper");
+const ethWallet = require("ethereumjs-wallet");
 
 class GxCertClient {
   constructor(web3, contractAddress, baseUrl, ipfsConfig, ipfsBaseUrlForFetching, keepsCid) {
@@ -358,8 +359,15 @@ class GxCertClient {
         }
       ]
     );
+    let signerAddress;
+    if (accountToSign.address) {
+      signerAddress = accountToSign.address;
+    } else if (accountToSign.privateKey) {
+      signerAddress = ethWallet.fromPrivateKey(accountToSign.privateKey).getAddressString();
+    }
     const signature = await this.sign(hash, accountToSign);
     return {
+      signerAddress,
       signature,
       hash,
       userCertId,
@@ -433,8 +441,15 @@ class GxCertClient {
         }
       ]
     );
+    let signerAddress;
+    if (accountToSign.address) {
+      signerAddress = accountToSign.address;
+    } else if (accountToSign.privateKey) {
+      signerAddress = ethWallet.fromPrivateKey(accountToSign.privateKey).getAddressString();
+    }
     const signature = await this.sign(hash, accountToSign);
     return {
+      signerAddress,
       signature,
       hash,
       group,
@@ -462,8 +477,15 @@ class GxCertClient {
         }
       ]
     );
+    let signerAddress;
+    if (accountToSign.address) {
+      signerAddress = accountToSign.address;
+    } else if (accountToSign.privateKey) {
+      signerAddress = ethWallet.fromPrivateKey(accountToSign.privateKey).getAddressString();
+    }
     const signature = await this.sign(hash, accountToSign);
     return {
+      signerAddress,
       signature,
       address,
       addressHash: hash,
@@ -491,8 +513,15 @@ class GxCertClient {
         }
       ]
     );
+    let signerAddress;
+    if (accountToSign.address) {
+      signerAddress = accountToSign.address;
+    } else if (accountToSign.privateKey) {
+      signerAddress = ethWallet.fromPrivateKey(accountToSign.privateKey).getAddressString();
+    }
     const signature = await this.sign(hash, accountToSign);
     return {
+      signerAddress,
       signature,
       address,
       addressHash: hash,
@@ -524,8 +553,15 @@ class GxCertClient {
         }
       ]
     );
+    let signerAddress;
+    if (accountToSign.address) {
+      signerAddress = accountToSign.address;
+    } else if (accountToSign.privateKey) {
+      signerAddress = ethWallet.fromPrivateKey(accountToSign.privateKey).getAddressString();
+    }
     const signature = await this.sign(hash, accountToSign);
     return {
+      signerAddress,
       signature,
       certificate,
       nonce,
@@ -650,8 +686,15 @@ class GxCertClient {
         }
       ]
     );
+    let signerAddress;
+    if (accountToSign.address) {
+      signerAddress = accountToSign.address;
+    } else if (accountToSign.privateKey) {
+      signerAddress = ethWallet.fromPrivateKey(accountToSign.privateKey).getAddressString();
+    }
     const signature = await this.sign(hash, accountToSign);
     return {
+      signerAddress,
       signature,
       hash,
       profile,
