@@ -211,6 +211,11 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_signerAddress",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "_groupId",
         "type": "uint256"
