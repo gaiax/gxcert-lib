@@ -9,7 +9,8 @@ const timeoutSec = 520;
 const axiosBase = require("axios");
 const leftPad = require("left-pad");
 const IpfsKeeper = require("ipfs-keeper");
-const ethWallet = require("ethereumjs-wallet");
+const ethWallet = require("ethereumjs-wallet").default;
+const EthUtil = require("ethereumjs-util");
 
 class GxCertClient {
   constructor(web3, contractAddress, baseUrl, ipfsConfig, ipfsBaseUrlForFetching, keepsCid) {
@@ -363,7 +364,7 @@ class GxCertClient {
     if (accountToSign.address) {
       signerAddress = accountToSign.address;
     } else if (accountToSign.privateKey) {
-      signerAddress = ethWallet.fromPrivateKey(Buffer.from(accountToSign.privateKey, "hex")).getAddressString();
+      signerAddress = ethWallet.fromPrivateKey(EthUtil.toBuffer("0x" + accountToSign.privateKey)).getAddressString();
     }
     const signature = await this.sign(hash, accountToSign);
     return {
@@ -445,7 +446,7 @@ class GxCertClient {
     if (accountToSign.address) {
       signerAddress = accountToSign.address;
     } else if (accountToSign.privateKey) {
-      signerAddress = ethWallet.fromPrivateKey(Buffer.from(accountToSign.privateKey, "hex")).getAddressString();
+      signerAddress = ethWallet.fromPrivateKey(EthUtil.toBuffer("0x" + accountToSign.privateKey)).getAddressString();
     }
     const signature = await this.sign(hash, accountToSign);
     return {
@@ -481,7 +482,7 @@ class GxCertClient {
     if (accountToSign.address) {
       signerAddress = accountToSign.address;
     } else if (accountToSign.privateKey) {
-      signerAddress = ethWallet.fromPrivateKey(Buffer.from(accountToSign.privateKey, "hex")).getAddressString();
+      signerAddress = ethWallet.fromPrivateKey(EthUtil.toBuffer("0x" + accountToSign.privateKey)).getAddressString();
     }
     const signature = await this.sign(hash, accountToSign);
     return {
@@ -517,7 +518,7 @@ class GxCertClient {
     if (accountToSign.address) {
       signerAddress = accountToSign.address;
     } else if (accountToSign.privateKey) {
-      signerAddress = ethWallet.fromPrivateKey(Buffer.from(accountToSign.privateKey, "hex")).getAddressString();
+      signerAddress = ethWallet.fromPrivateKey(EthUtil.toBuffer("0x" + accountToSign.privateKey)).getAddressString();
     }
     const signature = await this.sign(hash, accountToSign);
     return {
@@ -557,7 +558,7 @@ class GxCertClient {
     if (accountToSign.address) {
       signerAddress = accountToSign.address;
     } else if (accountToSign.privateKey) {
-      signerAddress = ethWallet.fromPrivateKey(Buffer.from(accountToSign.privateKey, "hex")).getAddressString();
+      signerAddress = ethWallet.fromPrivateKey(EthUtil.toBuffer("0x" + accountToSign.privateKey)).getAddressString();
     }
     const signature = await this.sign(hash, accountToSign);
     return {
@@ -690,7 +691,7 @@ class GxCertClient {
     if (accountToSign.address) {
       signerAddress = accountToSign.address;
     } else if (accountToSign.privateKey) {
-      signerAddress = ethWallet.fromPrivateKey(Buffer.from(accountToSign.privateKey, "hex")).getAddressString();
+      signerAddress = ethWallet.fromPrivateKey(EthUtil.toBuffer("0x" + accountToSign.privateKey)).getAddressString();
     }
     const signature = await this.sign(hash, accountToSign);
     return {
