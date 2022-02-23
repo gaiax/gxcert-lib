@@ -363,7 +363,7 @@ class GxCertClient {
     if (accountToSign.address) {
       signerAddress = accountToSign.address;
     } else if (accountToSign.privateKey) {
-      signerAddress = ethWallet.fromPrivateKey(accountToSign.privateKey).getAddressString();
+      signerAddress = ethWallet.fromPrivateKey(Buffer.from(accountToSign.privateKey, "hex")).getAddressString();
     }
     const signature = await this.sign(hash, accountToSign);
     return {
@@ -445,7 +445,7 @@ class GxCertClient {
     if (accountToSign.address) {
       signerAddress = accountToSign.address;
     } else if (accountToSign.privateKey) {
-      signerAddress = ethWallet.fromPrivateKey(accountToSign.privateKey).getAddressString();
+      signerAddress = ethWallet.fromPrivateKey(Buffer.from(accountToSign.privateKey, "hex")).getAddressString();
     }
     const signature = await this.sign(hash, accountToSign);
     return {
@@ -481,7 +481,7 @@ class GxCertClient {
     if (accountToSign.address) {
       signerAddress = accountToSign.address;
     } else if (accountToSign.privateKey) {
-      signerAddress = ethWallet.fromPrivateKey(accountToSign.privateKey).getAddressString();
+      signerAddress = ethWallet.fromPrivateKey(Buffer.from(accountToSign.privateKey, "hex")).getAddressString();
     }
     const signature = await this.sign(hash, accountToSign);
     return {
@@ -517,7 +517,7 @@ class GxCertClient {
     if (accountToSign.address) {
       signerAddress = accountToSign.address;
     } else if (accountToSign.privateKey) {
-      signerAddress = ethWallet.fromPrivateKey(accountToSign.privateKey).getAddressString();
+      signerAddress = ethWallet.fromPrivateKey(Buffer.from(accountToSign.privateKey, "hex")).getAddressString();
     }
     const signature = await this.sign(hash, accountToSign);
     return {
@@ -557,7 +557,7 @@ class GxCertClient {
     if (accountToSign.address) {
       signerAddress = accountToSign.address;
     } else if (accountToSign.privateKey) {
-      signerAddress = ethWallet.fromPrivateKey(accountToSign.privateKey).getAddressString();
+      signerAddress = ethWallet.fromPrivateKey(Buffer.from(accountToSign.privateKey, "hex")).getAddressString();
     }
     const signature = await this.sign(hash, accountToSign);
     return {
@@ -690,7 +690,7 @@ class GxCertClient {
     if (accountToSign.address) {
       signerAddress = accountToSign.address;
     } else if (accountToSign.privateKey) {
-      signerAddress = ethWallet.fromPrivateKey(accountToSign.privateKey).getAddressString();
+      signerAddress = ethWallet.fromPrivateKey(Buffer.from(accountToSign.privateKey, "hex")).getAddressString();
     }
     const signature = await this.sign(hash, accountToSign);
     return {
