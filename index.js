@@ -11,7 +11,6 @@ const leftPad = require("left-pad");
 const IpfsKeeper = require("ipfs-keeper");
 const ethWallet = require("ethereumjs-wallet").default;
 const EthUtil = require("ethereumjs-util");
-const exifremove = require("exifremove");
 
 class GxCertClient {
   constructor(web3, contractAddress, baseUrl, ipfsConfig, ipfsBaseUrlForFetching, keepsCid) {
@@ -151,8 +150,7 @@ class GxCertClient {
     }
   }
   async uploadImageToIpfs(imageBuf) {
-    const _imageBuf = exifremove.remove(imageBuf);
-    const cid = await this.ipfs.add(_imageBuf);
+    const cid = await this.ipfs.add(imageBuf);
     this.keep(cid.path);
     return cid.path;
   }
